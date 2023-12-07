@@ -1,6 +1,8 @@
 """Geometry classes and utilities."""
 #coucou
 
+#hello there
+
 class Point(object):
     """Meters coordinates, with attributes x, y: int"""
 
