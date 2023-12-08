@@ -1,10 +1,9 @@
 import circuit
 import sys
 from view import View
-
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
-APT_FILE = "course\DATA\circuit.txt"
+APT_FILE = "DATA/circuit.txt"
 
 def main():
     app = QApplication(sys.argv)
