@@ -1,7 +1,6 @@
-import geometry
 #commentaire test pour julie
-TRK_LIM_WIDTH = 50
-SEC_LIM_WIDTH = 10
+TRK_LIM_WIDTH = 5
+SEC_LIM_WIDTH = 2
 
 class TrackLimit:
     def __init__(self, name, coords):
@@ -13,36 +12,27 @@ class Circuit:
         self.name = name
         self.trackLimits = trackLimits
 
-def xys_to_points(str_xy_list):
-    """ xys_to_points(str list) returns Point tuple: converts x,y str list to Point tuple"""
-
-    def xy_to_point(str_xy):
-        x, y = map(int, str_xy.split(','))
-        return geometry.Point(x, y)
-
-    return tuple(xy_to_point(str_xy) for str_xy in str_xy_list)
+def coords_line(list):
+    xys = []
+    for i in range(len(list)//2):
+        xys.append((int(list[2*i]), int(list[2*i+1])))
+    return xys
 
 def from_file(filename):
     print(f'Loading circuit {filename} ...')
     file = open(filename)
     name = file.readline().strip()
-    Ext, Int, Dep = [], [], []
+    Ext, Int= [], []
     for line in file:
         words = line.strip().split()
         if words[0] == "Exterieur":
-            for x in words[1:2]:
-                Ext.append((int(x)))
-            for y_index in range(len(Ext)):
-                Ext[y_index] += int(words[2::2][y_index])
+            Ext = coords_line(words[1:])
         elif words[0] == "Interieur":
-            for x in words[1:2]:
-                Int.append((int(x)))
-            for y_index in range(len(Int)):
-                Int[y_index] += int(words[2::2][y_index])
+            Int = coords_line(words[1:])
         elif words[0] == "Depart":
             Dep = [(int(words[1]), int(words[2])), (int(words[3]), int(words[4]))]
     file.close()
-    return Circuit(name, (Ext, Int))
+    return Circuit(name, (TrackLimit("EXTERIOR", Ext), TrackLimit("INTERIOR", Int)))
 
 def main():
     pass

@@ -34,6 +34,10 @@ class View(QWidget):
         self.scene = QGraphicsScene()
         self.view = PanZoomView(self.scene)
 
+        self.add_circuit_items()
+        self.view.fit_scene_in_view()
+        root_layout.addWidget(self.view)
+
         self.show()
 
     def add_circuit_items(self):
@@ -46,9 +50,10 @@ class View(QWidget):
 
         for line in self.circuit.trackLimits:
             path = QPainterPath()
-            path.moveTo(line.coords[0].x, line.coords[0].y)
+            print(line.coords[0][0])
+            path.moveTo(line.coords[0][0], line.coords[0][1])
             for xy in line.coords[1:]:
-                path.lineTo(xy.x, xy.y)
+                path.lineTo(xy[0], xy[1])
             item = QGraphicsPathItem(path, circuit_group)
             item.setPen(pen)
             item.setToolTip(f'{line.name} LINE')
@@ -59,7 +64,7 @@ class View(QWidget):
         #     (p1, p2) = runway.coords
         for sector_lim_i in range(len(self.circuit.trackLimits[0].coords)):
             (p1, p2) = (self.circuit.trackLimits[0].coords[sector_lim_i], self.circuit.trackLimits[1].coords[sector_lim_i])
-            item = QGraphicsLineItem(p1.x, p1.y, p2.x, p2.y, circuit_group)
+            item = QGraphicsLineItem(p1[0], p1[1], p2[0], p2[1], circuit_group)
             item.setPen(pen)
             item.setToolTip(f'SECTOR {None}/{None} LIMIT')
         
