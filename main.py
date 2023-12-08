@@ -2,8 +2,7 @@ import circuit
 import sys
 from view import View
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QDockWidget, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow
 
 APT_FILE = "course\DATA\circuit.txt"
 

@@ -50,7 +50,6 @@ class View(QWidget):
 
         for line in self.circuit.trackLimits:
             path = QPainterPath()
-            print(line.coords[0][0])
             path.moveTo(line.coords[0][0], line.coords[0][1])
             for xy in line.coords[1:]:
                 path.lineTo(xy[0], xy[1])
