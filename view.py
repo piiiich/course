@@ -27,7 +27,7 @@ class View(QWidget):
 
         self.circuit = circuit
 
-        self.setWindowTitle(f'Race at {None}')
+        self.setWindowTitle(f'Race at {self.circuit.name}')
         self.resize(WIDTH, HEIGHT)
 
         root_layout = QVBoxLayout(self)

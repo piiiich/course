@@ -1,16 +1,22 @@
-import geometry as geo
-import view
+import circuit
 import sys
+from view import View
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QDockWidget, QMainWindow
 
+APT_FILE = "course\DATA\circuit.txt"
+
 def main():
-    # Create the QMainWindow to hold both radar view and flight inspector
     app = QApplication(sys.argv)
+    cir = circuit.from_file(APT_FILE)
+    view = View(cir)
+    # Create the QMainWindow to hold both radar view and flight inspector
+    
     win = QMainWindow()
-    win.setWindowTitle("Race Qt MainWindow & Dock")
-    win.show()
+    win.setWindowTitle("Race")
+    win.setCentralWidget(view)
+    win.showMaximized()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
