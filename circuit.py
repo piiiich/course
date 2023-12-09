@@ -1,4 +1,3 @@
-#commentaire test pour julie
 TRK_LIM_WIDTH = 5
 SEC_LIM_WIDTH = 2
 
