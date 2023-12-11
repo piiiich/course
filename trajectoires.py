@@ -1,25 +1,39 @@
 import numpy as np
 
 def clockwise(u, v):
-    '''
-    fonction de test si les segments u et v sont séquents
-    '''
     d = np.linalg.det([u, v])
-    if d < 0 or u[0]*v[0] < 0 or u[1]*v[1] < 0 :
-        return -1 #si orientation dans le sens inverse des aiguilles d'une montre
-    
-    elif d > 0 or np.dot(u, u) < np.dot(v, v):
-        return 1  #si orientation dans le sens des aiguilles d'une montre
-    
-    else :
-        return 0 #si colinéaires
-  
-def are_vectors_sequent(u, v):
-    orientation = clockwise(u, v)
-    return orientation in [1, -1, 0]
+    if d < 0:
+        return -1
+    elif d > 0:
+        return 1
+    elif u[0] * v[0] < 0 or u[1] * v[1] < 0:
+        return -1
+    elif np.dot(u, u) < np.dot(v, v):
+        return 1
+    else:
+        return 0
+
+def segment_intersection(A, B, C, D):
+    AB = B - A
+    AC = C - A
+    AD = D - A
+    CD = D - C
+    CA = A - C
+    CB = B - C
+
+    if (
+        clockwise(AB, AC) * clockwise(AB, AD) <= 0
+        and clockwise(CD, CA) * clockwise(CD, CB) <= 0
+    ):
+        return True
+    else:
+        return False
 
 # Test
-u = np.array([1, 1])
-v = np.array([0, 2])
-result = are_vectors_sequent(u, v)
+A = np.array([1, 1])
+B = np.array([4, 4])
+C = np.array([2, 2])
+D = np.array([5, 1])
+
+result = segment_intersection(A, B, C, D)
 print(result)
