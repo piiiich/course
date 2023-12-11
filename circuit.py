@@ -1,6 +1,6 @@
 #commentaire test pour julie
-TRK_LIM_WIDTH = 5
-SEC_LIM_WIDTH = 2
+TRK_LIM_WIDTH = 50
+SEC_LIM_WIDTH = 20
 
 class TrackLimit:
     def __init__(self, name, coords):

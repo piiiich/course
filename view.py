@@ -14,7 +14,7 @@ HEIGHT = 450
 
 CIR_COLOR = "grey"
 TRK_LIM_COLOR = "red"
-SEC_LIM_COLOR = "lightgrey"
+SEC_LIM_COLOR = "black"
 
 CIR_BRUSH = QBrush(QColor(CIR_COLOR))
 TRK_LIM_BRUSH = QBrush(QColor(TRK_LIM_COLOR))
