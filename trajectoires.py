@@ -20,7 +20,10 @@ def segment_intersection(A, B, C, D):
     CD = D - C
     CA = A - C
     CB = B - C
-
+    print(clockwise(AB, AC))
+    print(clockwise(AB, AD))
+    print(clockwise(CD, CA))
+    print(clockwise(CD, CB))
     if (
         clockwise(AB, AC) * clockwise(AB, AD) <= 0
         and clockwise(CD, CA) * clockwise(CD, CB) <= 0
@@ -30,10 +33,10 @@ def segment_intersection(A, B, C, D):
         return False
 
 # Test
-A = np.array([1, 1])
-B = np.array([4, 4])
-C = np.array([2, 2])
-D = np.array([5, 1])
+#A = np.array([1, 1])
+#B = np.array([4, 4])
+#C = np.array([2, 5])
+#D = np.array([5, 8])
 
-result = segment_intersection(A, B, C, D)
-print(result)
+#result = segment_intersection(A, B, C, D)
+#print(result)
