@@ -3,12 +3,13 @@ import sys
 from view import View
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
-APT_FILE = "course/DATA/Monaco.txt"
+CIR_FILE = "course/DATA/Monaco.txt"
 
 def main():
     app = QApplication(sys.argv)
-    cir = circuit.from_file(APT_FILE)
+    cir = circuit.from_file(CIR_FILE)
     view = View(cir)
+    print(view.circuit.sectorLimits[1].coords)
     # Create the QMainWindow to hold both radar view and flight inspector
     
     win = QMainWindow()
