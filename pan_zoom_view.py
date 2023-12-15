@@ -1,7 +1,4 @@
-"""
-    This module defines an interactive view that supports Pan and Zoom functions
-    (class PanZoomView)
-"""
+# Dans ce module on définit la vue interactive du circuit qui permettra de zoomer et de se déplacer
 
 import math
 
@@ -11,25 +8,24 @@ from PyQt5.QtWidgets import QGraphicsView
 
 
 class PanZoomView(QGraphicsView):
-    """ An interactive view that supports Pan and Zoom functions """
-
+    """ Une vue interactive qui supporte les fonctions Pan et Zoom"""
     def __init__(self, scene):
         super().__init__(scene)
-        # enable anti-aliasing
+        # permet d'avoir des lignes plus lisses
         self.setRenderHint(QPainter.Antialiasing)
-        # enable drag and drop of the view
+        # permet de déplacer la vue avec la souris
         self.setDragMode(self.ScrollHandDrag)
 
     def fit_scene_in_view(self):
-        """ Make sure the scene is displayed in its entirety by the view """
+        """ On vérifie que la scène est affichée dans son intégralité par la vue"""
         self.fitInView(self.sceneRect(), Qt.KeepAspectRatio)
 
     def zoom_view(self, factor):
-        """ This slot updates the zoom factor of the view """
+        """ On met à jour le facteur de zoom de la vue"""
         self.setTransformationAnchor(self.AnchorUnderMouse)
         super().scale(factor, factor)
 
     def wheelEvent(self, event):
-        """ Overrides method in QGraphicsView in order to zoom it when mouse scroll occurs """
+        """ Permet de zoomer avec la molette de la souris"""
         factor = math.pow(1.001, event.angleDelta().y())
         self.zoom_view(factor)
