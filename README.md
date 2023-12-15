@@ -1,7 +1,5 @@
 # course
 Projet de programmation S5
 
-blabla
-
-
-bli bli
+B
+Hello mon Respo préféré

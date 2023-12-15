@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QGraphicsEllipseItem, QGraphicsItemGroup,
                              QLabel, QLineEdit, QPushButton, QShortcut,
                              QSlider, QVBoxLayout, QWidget)
 import circuit
+import voiture
 from pan_zoom_view import PanZoomView
 
 
@@ -35,6 +36,7 @@ class View(QWidget):
         self.view = PanZoomView(self.scene)
 
         self.add_circuit_items()
+        self.add_car_items()
         self.view.fit_scene_in_view()
         root_layout.addWidget(self.view)
 
@@ -66,6 +68,16 @@ class View(QWidget):
             item = QGraphicsLineItem(p1[0], p1[1], p2[0], p2[1], circuit_group)
             item.setPen(pen)
             item.setToolTip(f'SECTOR {None}/{None} LIMIT')
+
+    def add_car_items(self):
+        car = voiture.Voiture("", 150)
+        self.scene.addItem(car)
+        car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
+        car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
+        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+    
+    def move_car_items(self):
+        pass
         
 def main():
     pass
