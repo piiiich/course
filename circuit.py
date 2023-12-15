@@ -12,7 +12,7 @@ class SectorLimit:
     def __init__(self, name, coords):
         self.name = name
         self.coords = coords
-        self.position = (np.mean([self.coords[0][0], self.coords[1][0]]), np.mean([self.coords[0][1], self.coords[1][1]]))
+        self.position = (np.mean(self.coords[0][0], self.coords[1][0]), np.mean(self.coords[0][1], self.coords[1][1]))
 
 class Circuit:
     def __init__(self, name, trackLimits, dep):
