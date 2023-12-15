@@ -24,11 +24,8 @@ def segment_intersection(A, B, C, D):
     CD = D - C
     CA = A - C
     CB = B - C
-    if (clockwise(AB, AC) * clockwise(AB, AD) <= 0 
-        and clockwise(CD, CA) * clockwise(CD, CB) <= 0):
-        return True
-    else:
-        return False
+    return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
+
 
 # Test
 #A = np.array([1, 1])
