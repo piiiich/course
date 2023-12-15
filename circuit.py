@@ -14,11 +14,9 @@ class SectorLimit: # Limites des secteurs
     def __init__(self, name, coords):
         self.name = name
         self.coords = coords
-        # Position du secteur calculée comme la moyenne des coordonnées des deux points qui le définissent
-        self.position = (np.mean(self.coords[0][0], self.coords[1][0]), 
-                        np.mean(self.coords[0][1], self.coords[1][1])) 
-                        
-class Circuit: # Circuit
+        self.position = (np.mean([self.coords[0][0], self.coords[1][0]]), np.mean([self.coords[0][1], self.coords[1][1]]))
+
+class Circuit:
     def __init__(self, name, trackLimits, dep):
         self.name = name
         self.trackLimits = trackLimits

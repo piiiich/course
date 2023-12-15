@@ -1,12 +1,6 @@
-# Dans ce module on définit la vue du circuit que l'on trace à l'aide de PyQt5
-
-from PyQt5.QtCore import QCoreApplication, QRectF, Qt, pyqtSignal
-from PyQt5.QtGui import QBrush, QColor, QKeySequence, QPainterPath, QPen
-from PyQt5.QtWidgets import (QGraphicsEllipseItem, QGraphicsItemGroup,
-                             QGraphicsLineItem, QGraphicsPathItem,
-                             QGraphicsRectItem, QGraphicsScene, QHBoxLayout,
-                             QLabel, QLineEdit, QPushButton, QShortcut,
-                             QSlider, QVBoxLayout, QWidget)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
+from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
 import circuit
 import voiture
 from pan_zoom_view import PanZoomView
@@ -83,6 +77,7 @@ class View(QWidget): # Vue du circuit
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
         car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        car.move()
     
     def move_car_items(self):
         pass
