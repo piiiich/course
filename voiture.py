@@ -19,8 +19,8 @@ class Voiture(QGraphicsEllipseItem):
         # elif self.ecurie == "Mercedes":
         #     self.color = "Cyan"
 
-    #On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. les distances (en pixels) ne sont
-    #pas équivalentes dans les deux cas si on les ramène à des metres
+    # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. les distances (en pixels) ne sont
+    # pas équivalentes dans les deux cas si on les ramène à des metres
         self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
@@ -31,6 +31,7 @@ class Voiture(QGraphicsEllipseItem):
         dest = self.position
         for point in self.range:
             if (dist(self.position, point) > max_dist) and (dist(dest, sector_end) < dist(self.position, sector_end)) :
+                # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position, point)
                 dest = point
         self.setPos(self.x()+dest[0], self.y()+dest[1])

@@ -1,40 +1,41 @@
-from PyQt5.QtCore import QCoreApplication, QRectF, Qt, pyqtSignal
-from PyQt5.QtGui import QBrush, QColor, QKeySequence, QPainterPath, QPen
-from PyQt5.QtWidgets import (QGraphicsEllipseItem, QGraphicsItemGroup,
-                             QGraphicsLineItem, QGraphicsPathItem,
-                             QGraphicsRectItem, QGraphicsScene, QHBoxLayout,
-                             QLabel, QLineEdit, QPushButton, QShortcut,
-                             QSlider, QVBoxLayout, QWidget)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
+from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
 import circuit
 import voiture
 from pan_zoom_view import PanZoomView
 
-
+# Largeur et hauteur de la fenêtre
 WIDTH = 800
 HEIGHT = 450
 
+# Couleurs des tracés (piste, limites, secteurs)
 CIR_COLOR = "grey"
 TRK_LIM_COLOR = "red"
 SEC_LIM_COLOR = "black"
 
+# Pinceaux pour les tracés
 CIR_BRUSH = QBrush(QColor(CIR_COLOR))
 TRK_LIM_BRUSH = QBrush(QColor(TRK_LIM_COLOR))
 SEC_LIM_BRUSH = QBrush(QColor(SEC_LIM_COLOR))
 
 
-class View(QWidget):
+class View(QWidget): # Vue du circuit
     def __init__(self, circuit):
         super().__init__()
 
         self.circuit = circuit
 
+        # Création de la fenêtre
         self.setWindowTitle(f'Race at {self.circuit.name}')
         self.resize(WIDTH, HEIGHT)
 
+        # Affichage du circuit
         root_layout = QVBoxLayout(self)
         self.scene = QGraphicsScene()
         self.view = PanZoomView(self.scene)
 
+        # Ajout des tracés
         self.add_circuit_items()
         self.add_car_items()
         self.view.fit_scene_in_view()
@@ -70,11 +71,13 @@ class View(QWidget):
             item.setToolTip(f'SECTOR {None}/{None} LIMIT')
 
     def add_car_items(self):
+        """ Ajoute les voitures sur la ligne de départ """
         car = voiture.Voiture("", 150)
         self.scene.addItem(car)
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
         car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        car.move()
     
     def move_car_items(self):
         pass
