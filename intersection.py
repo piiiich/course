@@ -1,6 +1,9 @@
+# Dans ce module on teste l'intersection de deux segments de droite
+
 import numpy as np
 
 def clockwise(u, v):
+    """ Renvoie 1 si v est à droite de u, -1 si v est à gauche de u, 0 si u et v sont colinéaires """
     d = np.linalg.det([u, v])
     if d < 0:
         return -1
@@ -14,23 +17,15 @@ def clockwise(u, v):
         return 0
 
 def segment_intersection(A, B, C, D):
+    """ Renvoie True si les segments [AB] et [CD] s'intersectent, False sinon """
     AB = B - A
     AC = C - A
     AD = D - A
     CD = D - C
     CA = A - C
     CB = B - C
-    #print(clockwise(AB, AC))
-    #print(clockwise(AB, AD))
-    #print(clockwise(CD, CA))
-    #print(clockwise(CD, CB))
-    if (
-        clockwise(AB, AC) * clockwise(AB, AD) <= 0
-        and clockwise(CD, CA) * clockwise(CD, CB) <= 0
-    ):
-        return True
-    else:
-        return False
+    return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
+
 
 # Test
 #A = np.array([1, 1])
