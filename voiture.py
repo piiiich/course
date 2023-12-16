@@ -34,10 +34,9 @@ class Voiture(QGraphicsEllipseItem):
                 # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position, point)
                 dest = point
-        self.setPos(self.x()+dest[0], self.y()+dest[1])
+        self.setPos(self.x() + dest[0], self.y() + dest[1])
         
         
-
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)
 
