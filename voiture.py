@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QGraphicsEllipseItem
 import numpy as np
-import view
+import intersection as X
 
 CAR_WIDTH = 100
 
@@ -11,6 +11,7 @@ class Voiture(QGraphicsEllipseItem):
         self.color = "Black"
         self.position = (self.x(), self.y())
         self.speed = ((0, 0), (0, 0))
+        self.current_sector = 0
 
         # if self.ecurie == "Ferrari" :
         #     self.color = "Red"
@@ -27,14 +28,18 @@ class Voiture(QGraphicsEllipseItem):
         
     def move(self):
         max_dist = 0
-        sector_end = (0, 0) #----- A COMPLETER -----
-        dest = self.position
+        init = self.position
+        dest = init
         for point in self.range:
-            if (dist(self.position, point) > max_dist) and (dist(dest, sector_end) < dist(self.position, sector_end)) :
+            if (dist(self.position, point) > max_dist) and ('''Condition pour vérifier que ça avance dans le bon sens''') and ('''Condition pour les tracklimits'''):
                 # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position, point)
-                dest = point
+                dest = (self.speed[i] + point[i] for i in [0, 1])
+        self.speed = (init, dest)
         self.setPos(self.x() + dest[0], self.y() + dest[1])
+        if X.segment_intersection(dest, init, '''Les 2 points du prochain sectorLimit'''):
+            self.current_sector += 1
+
         
         
 def dist(A, B):
