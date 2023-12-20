@@ -22,6 +22,7 @@ class Voiture(QGraphicsEllipseItem):
 
     # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. les distances (en pixels) ne sont
     # pas équivalentes dans les deux cas si on les ramène à des metres
+        # 8 états possibles par défaut de la voiture
         self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
@@ -40,6 +41,7 @@ class Voiture(QGraphicsEllipseItem):
         if X.segment_intersection(dest, init, '''Les 2 points du prochain sectorLimit'''):
             self.current_sector += 1
 
+# Problèmes lignes 35, 38, 39, 40, 41 avec notamment la définition du vectuer vitesse
         
         
 def dist(A, B):
