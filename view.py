@@ -76,11 +76,10 @@ class View(QWidget): # Vue du circuit
         self.scene.addItem(car)
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
-        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
-        car.move()
+        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)   
     
-    def move_car_items(self):
-        pass
+    def move_car_items(self, car):
+        car.move(self.circuit)
         
 def main():
     pass

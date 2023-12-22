@@ -10,7 +10,7 @@ class Voiture(QGraphicsEllipseItem):
         self.ecurie = ecurie
         self.color = "Black"
         self.position = (self.x(), self.y())
-        self.speed = ((0, 0), (0, 0))
+        self.speed = (0, 0)
         self.current_sector = 0
 
         # if self.ecurie == "Ferrari" :
@@ -27,18 +27,18 @@ class Voiture(QGraphicsEllipseItem):
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
         
-    def move(self):
+    def move(self, circuit):
         max_dist = 0
         init = self.position
         dest = init
         for point in self.range:
-            if (dist(self.position, point) > max_dist) and ('''Condition pour vérifier que ça avance dans le bon sens''') and ('''Condition pour les tracklimits'''):
+            if (dist(self.position, point) > max_dist) and ('''Condition pour vérifier que ça avance dans le bon sens''') and ('''contition pour tracklimits'''):
                 # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position, point)
-                dest = (self.speed[i] + point[i] for i in [0, 1])
-        self.speed = (init, dest)
-        self.setPos(self.x() + dest[0], self.y() + dest[1])
-        if X.segment_intersection(dest, init, '''Les 2 points du prochain sectorLimit'''):
+                dest = tuple(self.speed[i] + point[i] for i in [0, 1])
+        self.speed = dest
+        self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
+        if X.segment_intersection(dest, init, circuit.sectorLimits[self.current_sector+1].coords[0], circuit.sectorLimits[self.current_sector+1].coords[1]):
             self.current_sector += 1
 
 # Problèmes lignes 35, 38, 39, 40, 41 avec notamment la définition du vectuer vitesse
