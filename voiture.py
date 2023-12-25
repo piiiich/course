@@ -30,19 +30,17 @@ class Voiture(QGraphicsEllipseItem):
     def move(self, circuit):
         max_dist = 0
         init = self.position
-        dest = init
         for point in self.range:
-            if (dist(self.position, point) > max_dist) and ('''Condition pour vérifier que ça avance dans le bon sens''') and ('''contition pour tracklimits'''):
+            test_speed = tuple(self.speed[i] + point[i] for i in [0, 1])
+            test_dest = tuple(init[i] + test_speed[i] for i in [0, 1])
+            if (dist(self.position, point) > max_dist) and (not X.x_tracklimit(self, test_dest, init, circuit)):
                 # Faire avec le produit scalaire avec les bords
-                max_dist = dist(self.position, point)
-                dest = tuple(self.speed[i] + point[i] for i in [0, 1])
-        self.speed = dest
+                max_dist = dist(self.position, test_dest)
+                self.speed = test_speed
+                dest = test_dest
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
-        if X.segment_intersection(dest, init, circuit.sectorLimits[self.current_sector+1].coords[0], circuit.sectorLimits[self.current_sector+1].coords[1]):
-            self.current_sector += 1
-
-# Problèmes lignes 35, 38, 39, 40, 41 avec notamment la définition du vectuer vitesse
-        
+        if X.x_sector(self, dest, init, circuit):
+            self.current_sector += 1        
         
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)

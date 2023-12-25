@@ -26,6 +26,11 @@ def segment_intersection(A, B, C, D):
     CB = B - C
     return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
 
+def x_sector(car, dest, init, circuit):
+    return segment_intersection(dest, init, circuit.sectorLimits[car.current_sector+1].coords[0], circuit.sectorLimits[car.current_sector+1].coords[1])
+
+def x_tracklimit(car, dest, init, circuit):
+    return segment_intersection(dest, init, circuit.trackLimits[car.current_sector].coords[0], circuit.trackLimits[car.current_sector].coords[1])
 
 # Test
 #A = np.array([1, 1])
