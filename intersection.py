@@ -18,12 +18,12 @@ def clockwise(u, v):
 
 def segment_intersection(A, B, C, D):
     """ Renvoie True si les segments [AB] et [CD] s'intersectent, False sinon """
-    AB = B - A
-    AC = C - A
-    AD = D - A
-    CD = D - C
-    CA = A - C
-    CB = B - C
+    AB = tuple([B[i]-A[i] for i in range(2)])
+    AC = tuple([C[i]-A[i] for i in range(2)])
+    AD = tuple([D[i]-A[i] for i in range(2)])
+    CD = tuple([D[i]-C[i] for i in range(2)])
+    CA = tuple([A[i]-C[i] for i in range(2)])
+    CB = tuple([B[i]-C[i] for i in range(2)])
     return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
 
 def x_sector(car, dest, init, circuit):
