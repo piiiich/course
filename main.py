@@ -12,7 +12,6 @@ def main():
     app = QApplication(sys.argv)
     cir = circuit.from_file(CIR_FILE)
     view = View(cir)
-    print(view.circuit.sectorLimits[1].coords)
     win = QMainWindow()
     win.setWindowTitle("Race")
     win.setCentralWidget(view)

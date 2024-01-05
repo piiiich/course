@@ -41,6 +41,8 @@ class View(QWidget): # Vue du circuit
         self.view.fit_scene_in_view()
         root_layout.addWidget(self.view)
 
+        self.view.keyPressEvent = self.keyPressEvent
+
         self.show()
 
     def add_circuit_items(self):
@@ -72,16 +74,20 @@ class View(QWidget): # Vue du circuit
 
     def add_car_items(self):
         """ Ajoute les voitures sur la ligne de départ """
-        car = voiture.Voiture("", 150)
+        car = voiture.Voiture("Ferrari", 150)
         self.scene.addItem(car)
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
-        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2) 
-        car.move(self.circuit)  
-    
+        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        
     def move_car_items(self, car):
         car.move(self.circuit)
-        
+
+    def keyPressEvent(self, event): 
+        if event.key() == Qt.Key_Right:
+            car = self.scene.items()[0]
+            self.move_car_items(car)
+
 def main():
     pass
 if __name__ == '__main__':

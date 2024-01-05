@@ -2,14 +2,13 @@ from PyQt5.QtWidgets import QGraphicsEllipseItem
 import numpy as np
 import intersection as X
 
-CAR_WIDTH = 100
+CAR_WIDTH = 70
 
 class Voiture(QGraphicsEllipseItem):
     def __init__(self, ecurie, reach):
         super().__init__()
         self.ecurie = ecurie
         self.color = "Black"
-        self.position = (self.x(), self.y())
         self.speed = (0, 0)
         self.current_sector = 0
 
@@ -26,21 +25,27 @@ class Voiture(QGraphicsEllipseItem):
         self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
-        
+
+    def position(self):
+        return (self.x(), self.y())
+
     def move(self, circuit):
         max_dist = 0
-        init = self.position
+        init_pos = self.position()
+        init_speed = self.speed
         for point in self.range:
-            test_speed = tuple(self.speed[i] + point[i] for i in [0, 1])
-            test_dest = tuple(init[i] + test_speed[i] for i in [0, 1])
-            if (dist(self.position, point) > max_dist) and (not X.x_tracklimit(self, test_dest, init, circuit)):
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
+            print(X.x_tracklimit(self, test_dest, init_pos, circuit))
+            if (dist(self.position(), test_dest) > max_dist) and (not X.x_tracklimit(self, test_dest, init_pos, circuit)):
                 # Faire avec le produit scalaire avec les bords
-                max_dist = dist(self.position, test_dest)
+                max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
                 dest = test_dest
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
-        if X.x_sector(self, dest, init, circuit):
-            self.current_sector += 1        
+        if X.x_sector(self, dest, init_pos, circuit):
+            self.current_sector += 1
+        print(self.current_sector)
         
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)
