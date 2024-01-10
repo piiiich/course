@@ -32,19 +32,21 @@ class Voiture(QGraphicsEllipseItem):
     def destination_test(self, circuit, init_pos, init_speed):
         # teste les différentes positions possibles depuis init_pos avec init_speed
         max_dist = 0
+        
         for point in self.range:
+
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
 
             further = (dist(self.position(), test_dest) > max_dist)
             in_circuit = (not X.x_tracklimit(self, test_dest, init_pos, circuit))
             towards_end = (X.direction_test(self, test_dest, init_pos, circuit))
-            
+
             if further and in_circuit and towards_end :
-                # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
                 dest = test_dest
+
         return dest
     
     def recursive_destination_test(self, circuit, init_pos, init_speed, depth):
