@@ -28,11 +28,10 @@ class Voiture(QGraphicsEllipseItem):
 
     def position(self):
         return (self.x(), self.y())
-
-    def move(self, circuit):
+    
+    def destination_test(self, circuit, init_pos, init_speed):
+        # teste les différentes positions possibles depuis init_pos avec init_speed
         max_dist = 0
-        init_pos = self.position()
-        init_speed = self.speed
         for point in self.range:
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
@@ -41,7 +40,25 @@ class Voiture(QGraphicsEllipseItem):
                 max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
                 dest = test_dest
+        return dest
+    
+    def recursive_destination_test(self, circuit, init_pos, init_speed, depth):
+        level = depth
+        pos = init_pos
+        speed = init_speed
+        if level == 1:
+            return self.destination_test(circuit, pos, speed)
+        else :
+            pass
+
+    def move(self, circuit):
+        init_pos = self.position()
+        init_speed = self.speed
+
+        dest = self.recursive_destination_test(circuit, init_pos, init_speed, 1)
+
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
+
         crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
         if crosses_sector:
             self.current_sector += sectors_crossed
