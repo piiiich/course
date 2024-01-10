@@ -36,16 +36,15 @@ class Voiture(QGraphicsEllipseItem):
         for point in self.range:
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
-            print(X.x_tracklimit(self, test_dest, init_pos, circuit))
-            if (dist(self.position(), test_dest) > max_dist) and (not X.x_tracklimit(self, test_dest, init_pos, circuit)):
+            if (dist(self.position(), test_dest) > max_dist) and (not X.x_tracklimit(self, test_dest, init_pos, circuit)) and (X.direction_test(self, test_dest, init_pos, circuit)):
                 # Faire avec le produit scalaire avec les bords
                 max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
                 dest = test_dest
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
-        if X.x_sector(self, dest, init_pos, circuit):
-            self.current_sector += 1
-        print(self.current_sector)
+        crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
+        if crosses_sector:
+            self.current_sector += sectors_crossed
         
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)

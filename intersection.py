@@ -26,8 +26,19 @@ def segment_intersection(A, B, C, D):
     CB = tuple([B[i]-C[i] for i in range(2)])
     return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
 
+def direction_test(car, dest, init, circuit):
+    u = tuple(dest[i]-init[i] for i in (0, 1))
+    v = tuple(circuit.trackLimits[car.current_sector].coords[1][i] - circuit.trackLimits[car.current_sector].coords[0][i] for i in (0, 1))
+    return np.dot(u, v) > 0
+
 def x_sector(car, dest, init, circuit):
-    return segment_intersection(dest, init, circuit.sectorLimits[car.current_sector+1].coords[0], circuit.sectorLimits[car.current_sector+1].coords[1])
+    test = False
+    number = 0
+    for i in range(1, 11):
+        if segment_intersection(dest, init, circuit.sectorLimits[car.current_sector+1].coords[0], circuit.sectorLimits[car.current_sector+1].coords[1]):
+            test = True
+            number += 1
+    return test, number
 
 def x_tracklimit(car, dest, init, circuit):
     return segment_intersection(dest, init, circuit.trackLimits[car.current_sector].coords[0], circuit.trackLimits[car.current_sector].coords[1])
