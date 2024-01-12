@@ -52,33 +52,45 @@ class Voiture(QGraphicsEllipseItem):
 
         return dest'''
     
+    ''' Proposition en compréhension : 
     def sorted_dests(self, init_pos, init_speed):
-        # Trier la liste des 9 coups 
-        liste_coups = []
-        # On parcours la matrice des 9 coups envisages
-        for point in self.range:
-            # Vitesse obtenue pour le point sur lequel on boucle 
-            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
-            # Destination ocle 
-            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
-            # On rajoute la destination a la liste des coups
-            liste_coups.append([test_dest, test_speed])
+    liste_coups = [
+        [
+            tuple(init_pos[i] + (init_speed[i] + point[i]) for i in [0, 1]),
+            tuple(init_speed[i] + point[i] for i in [0, 1])
+        ]
+        for point in self.range
         
-        # max_dist = 0
-        liste_distances = []
-        # liste_coups_triee = []
-        for dests in liste_coups:
-            distance =  dist(init_pos, dests) #distance entre point de départ et point d'arrivée
-            liste_distances.append((dests , distance))
-        
+        liste_distances = [(dests, dist(init_pos, dests)) for dests in liste_coups]
         n = len(liste_distances)
-        # tri bubble
+        
+        # Tri bubble
         for i in range(n):
             for j in range(0, n-i, j):
-                if liste_distances[j] > liste_distances[j + 1]:
+                if liste_distances[j] > liste_distances[j+1]:
+                    liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
+    ]
+    return liste_coups  
+    '''
+
+    def sorted_dests(self, init_pos, init_speed):
+        # Objectif : trier la liste des 9 coups 
+        liste_coups = []
+        for point in self.range:   # On parcours la matrice des 9 coups envisages
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])   # Vitesse obtenue pour le point sur lequel on boucle 
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])   # (x, y) de la destination
+            liste_coups.append([test_dest, test_speed])   # On rajoute la destination a la liste des coups
+
+        liste_distances = [(dests, dist(init_pos, dests)) for dests in liste_coups]
+        n = len(liste_distances)
+
+        # Tri bubble
+        for i in range(n):
+            for j in range(0, n-i, j):
+                if liste_distances[j] > liste_distances[j+1]:
                     liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
         
-        return [coup for coup in liste_distances[2]]
+        return [((coup[0], coup[1]), speed) for (coup, speed, _) in liste_distances]
             
 
     def find_dest(self, circuit, init_pos, init_speed, depth):
@@ -113,17 +125,6 @@ class Voiture(QGraphicsEllipseItem):
         
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)
-
-def bubble_sort(input_list):
-    n = len(input_list)
-
-    for i in range(n):
-        # La boucle externe parcourt toute la liste
-        for j in range(0, n-i-1):
-            # La boucle interne parcourt la liste jusqu'à n-i-1
-            # Échange les éléments si ils sont dans le mauvais ordre
-            if input_list[j] > input_list[j+1]:
-                input_list[j], input_list[j+1] = input_list[j+1], input_list[j]
 
 def main():
     pass
