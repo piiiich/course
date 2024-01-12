@@ -42,7 +42,7 @@ class Voiture(QGraphicsEllipseItem):
             in_circuit = (not X.x_tracklimit(self, test_dest, init_pos, circuit))
             towards_end = (X.direction_test(self, test_dest, init_pos, circuit))
 
-            if further and in_circuit and towards_end :
+            if in_circuit and towards_end and further :
                 max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
                 dest = test_dest
