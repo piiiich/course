@@ -1,3 +1,13 @@
+"""
+Nom du projet : Course de voitures à deux joueurs
+Auteurs : Gaspard PICHON, Emma PAILLART, Mathis GIRAUD, Julie CASTAGNET
+Date de création : de novembre 2023 à janvier 2024
+Description : Cet ensemble de modules crée une course de voitures. Les voitures se déplacent sur un circuit en 
+essayant d'optimiser leurs trajectoires. Le but pour la voiture est de franchir la ligne d'arrivée en ayant fait le moins de coups possibles.
+Contenu et modules utilisés : main.py ; intersection.py ; pan_zoom_view.py ; view.py ; voiture.py ; circuit.py
+"""
+
+
 # Dans ce module on va créer la fenêtre principale de l'application : on appelle tous nos fichiers
 
 import circuit
