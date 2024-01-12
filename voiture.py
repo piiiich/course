@@ -32,7 +32,7 @@ class Voiture(QGraphicsEllipseItem):
     def destination_test(self, circuit, init_pos, init_speed):
         # teste les différentes positions possibles depuis init_pos avec init_speed
         max_dist = 0
-        
+        # liste_coups = [] 
         for point in self.range:
 
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
@@ -45,7 +45,9 @@ class Voiture(QGraphicsEllipseItem):
             if further and in_circuit and towards_end :
                 max_dist = dist(self.position(), test_dest)
                 self.speed = test_speed
-                dest = test_dest
+                dest = test_dest 
+                # dest.append(test_dest) 
+        # sort 
 
         return dest
     

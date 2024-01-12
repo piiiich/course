@@ -2,8 +2,11 @@
 
 import numpy as np
 
-TRK_LIM_WIDTH = 50 # Largeur de la piste
-SEC_LIM_WIDTH = 20 # Largeur des secteurs
+# Largeur de la piste
+TRK_LIM_WIDTH = 50
+
+# Largeur des secteurs
+SEC_LIM_WIDTH = 20 
 
 class TrackLimit: # Limites de la piste
     def __init__(self, name, coords):
@@ -21,8 +24,10 @@ class Circuit:
         self.trackLimits = trackLimits
         self.sectorLimits = []
         for sector_index in range(len(self.trackLimits[0].coords)):
+            
             # On crée les secteurs et leurs limites en utilisant les limites de la piste
             self.sectorLimits.append(SectorLimit(str(sector_index), [self.trackLimits[i].coords[sector_index] for i in [0, 1]]))
+            
         self.dep = dep
 
 def coords_line(list):
