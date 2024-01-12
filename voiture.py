@@ -29,6 +29,7 @@ class Voiture(QGraphicsEllipseItem):
     def position(self):
         return (self.x(), self.y())
     
+    '''
     def destination_test(self, circuit, init_pos, init_speed):
         # teste les différentes positions possibles depuis init_pos avec init_speed
         max_dist = 0
@@ -49,22 +50,58 @@ class Voiture(QGraphicsEllipseItem):
                 # dest.append(test_dest) 
         # sort 
 
-        return dest
+        return dest'''
     
-    def recursive_destination_test(self, circuit, init_pos, init_speed, depth):
-        level = depth
+    def sorted_dests(self, init_pos, init_speed):
+        # Trier la liste des 9 coups 
+        liste_coups = []
+
+        # On parcours la matrice des 9 coups envisages
+        for point in self.range:
+
+            # Vitesse obtenue pour le point sur lequel on boucle 
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
+
+            # Destination ocle 
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
+
+            # On rajoute la destination a la liste des coups
+            liste_coups.append([test_dest, test_speed])
+        
+        max_dist = 0
+        liste_coups_triee = []
+        liste_distances = []
+        for dests in liste_coups:
+            distance =  dist(init_pos, dests)
+            liste_distances.append((dests , distance))
+            liste_coups_triee.append(liste_distances[0][0])
+            
+            pass
+        return liste_coups_triee
+
+    def find_dest(self, circuit, init_pos, init_speed, depth):
         pos = init_pos
         speed = init_speed
-        if level == 1:
-            return self.destination_test(circuit, pos, speed)
-        else :
-            pass
+        
+        def recursive_destination_test(List, depth):
+            level = depth
+            if level == 0:
+                return self.dest_in_list(List, pos, circuit)
+            else :
+                current_list = self.sorted_dests(pos, speed)
+                for dest in current_list:
+                    next_pos, next_speed = dest[0], dest[1]
+                    next_list = self.sorted_dests(next_pos, next_speed)
+                    return recursive_destination_test(next_list, level-1)
+            
+        dest = recursive_destination_test(self.sorted_dests(pos, speed), depth)
+        return dest
 
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
 
-        dest = self.recursive_destination_test(circuit, init_pos, init_speed, 1)
+        dest = self.find_dest(circuit, init_pos, init_speed, 1)
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
@@ -75,8 +112,20 @@ class Voiture(QGraphicsEllipseItem):
 def dist(A, B):
     return np.sqrt((A[0]-B[0])**2+(A[1]-B[1])**2)
 
+def bubble_sort(input_list):
+    n = len(input_list)
+
+    for i in range(n):
+        # La boucle externe parcourt toute la liste
+        for j in range(0, n-i-1):
+            # La boucle interne parcourt la liste jusqu'à n-i-1
+            # Échange les éléments si ils sont dans le mauvais ordre
+            if input_list[j] > input_list[j+1]:
+                input_list[j], input_list[j+1] = input_list[j+1], input_list[j]
+
 def main():
     pass
 
 if __name__ == "__main__":
     main()
+
