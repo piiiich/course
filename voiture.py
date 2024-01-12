@@ -55,29 +55,31 @@ class Voiture(QGraphicsEllipseItem):
     def sorted_dests(self, init_pos, init_speed):
         # Trier la liste des 9 coups 
         liste_coups = []
-
         # On parcours la matrice des 9 coups envisages
         for point in self.range:
-
             # Vitesse obtenue pour le point sur lequel on boucle 
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
-
             # Destination ocle 
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
-
             # On rajoute la destination a la liste des coups
             liste_coups.append([test_dest, test_speed])
         
-        max_dist = 0
-        liste_coups_triee = []
+        # max_dist = 0
         liste_distances = []
+        # liste_coups_triee = []
         for dests in liste_coups:
-            distance =  dist(init_pos, dests)
+            distance =  dist(init_pos, dests) #distance entre point de départ et point d'arrivée
             liste_distances.append((dests , distance))
-            liste_coups_triee.append(liste_distances[0][0])
+        
+        n = len(liste_distances)
+        # tri bubble
+        for i in range(n):
+            for j in range(0, n-i, j):
+                if liste_distances[j] > liste_distances[j + 1]:
+                    liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
+        
+        return [coup for coup in liste_distances[2]]
             
-            pass
-        return liste_coups_triee
 
     def find_dest(self, circuit, init_pos, init_speed, depth):
         pos = init_pos
