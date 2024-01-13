@@ -110,7 +110,15 @@ class Voiture(QGraphicsEllipseItem):
 
         return [(coup, speed) for (coup, speed, _) in liste_distances]
             
-            
+    def dest_in_list(self, List, pos, circuit):
+        for dest in List:
+            in_circuit = (not X.x_tracklimit(self, dest, pos, circuit))
+            towards_end = (X.direction_test(self, dest, pos, circuit))
+            if in_circuit and towards_end:
+                return dest
+            else:
+                pass
+
     def find_dest(self, circuit, init_pos, init_speed, depth):
         ''' 
         Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
