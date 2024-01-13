@@ -94,7 +94,7 @@ class Voiture(QGraphicsEllipseItem):
             # On rajoute la destination a la liste des coups
             liste_coups.append([test_dest, test_speed])  
 
-        return [(dests, dist(init_pos, dests)) for dests in liste_coups]
+        return [[dests, dist(init_pos, dests[0])] for dests in liste_coups]
         
 
     def tri_liste_distances(self, init_pos, init_speed):
@@ -108,8 +108,17 @@ class Voiture(QGraphicsEllipseItem):
                 if liste_distances[j][1] < liste_distances[j+1][1]:
                     liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
 
-        return [(coup, speed) for (coup, speed, _) in liste_distances]
+        return [tab[:2] for tab in liste_distances]
             
+    def dest_in_list(self, List, pos, circuit):
+        for dest in List:
+            in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
+            towards_end = (X.direction_test(self, dest[0], pos, circuit))
+
+            if in_circuit and towards_end:
+                return dest[0]
+            else:
+                pass
             
     def find_dest(self, circuit, init_pos, init_speed, depth):
         ''' 
@@ -118,6 +127,7 @@ class Voiture(QGraphicsEllipseItem):
         '''
         pos = init_pos
         speed = init_speed
+        print(init_speed)
         
         def recursive_destination_test(List, depth):
             level = depth
@@ -130,6 +140,7 @@ class Voiture(QGraphicsEllipseItem):
                 current_list = self.tri_liste_distances(pos, speed)
                 for dest in current_list:
                     next_pos, next_speed = dest[0], dest[1]
+                    print(speed, next_speed)
                     next_list = self.tri_liste_distances(next_pos, next_speed)
                     return recursive_destination_test(next_list, level-1)
             
