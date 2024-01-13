@@ -81,17 +81,25 @@ class Voiture(QGraphicsEllipseItem):
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])   # (x, y) de la destination
             liste_coups.append([test_dest, test_speed])   # On rajoute la destination a la liste des coups
 
-        liste_distances = [(dests, dist(init_pos, dests)) for dests in liste_coups]
+        liste_distances = [(dests, dist(init_pos, dests[0])) for dests in liste_coups]
         n = len(liste_distances)
 
         # Tri bubble
         for i in range(n):
-            for j in range(0, n-i, j):
+            for j in range(0, n-i-1):
                 if liste_distances[j] > liste_distances[j+1]:
                     liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
         
         return [((coup[0], coup[1]), speed) for (coup, speed, _) in liste_distances]
             
+    def dest_in_list(self, List, pos, circuit):
+        for dest in List:
+            in_circuit = (not X.x_tracklimit(self, dest, pos, circuit))
+            towards_end = (X.direction_test(self, dest, pos, circuit))
+            if in_circuit and towards_end:
+                return dest
+            else:
+                pass
 
     def find_dest(self, circuit, init_pos, init_speed, depth):
         pos = init_pos
