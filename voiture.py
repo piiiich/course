@@ -94,7 +94,7 @@ class Voiture(QGraphicsEllipseItem):
             # On rajoute la destination a la liste des coups
             liste_coups.append([test_dest, test_speed])  
 
-        return [[dests, dist(init_pos, dests[0])] for dests in liste_coups]
+        return [dests+[dist(init_pos, dests[0])] for dests in liste_coups]
         
 
     def tri_liste_distances(self, init_pos, init_speed):
@@ -113,10 +113,12 @@ class Voiture(QGraphicsEllipseItem):
     def dest_in_list(self, List, pos, circuit):
         for dest in List:
             in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
-            towards_end = (X.direction_test(self, dest[0], pos, circuit))
+            towards_end = X.direction_test(self, dest[0], pos, circuit)
+
+            print(in_circuit, towards_end)
 
             if in_circuit and towards_end:
-                return dest[0]
+                return dest
             else:
                 pass
             
@@ -127,20 +129,18 @@ class Voiture(QGraphicsEllipseItem):
         '''
         pos = init_pos
         speed = init_speed
-        print(init_speed)
         
         def recursive_destination_test(List, depth):
             level = depth
 
             # Condition d'arrêt si on atteint la profondeur voulue
             if level == 0:
+                print(List)
                 return self.dest_in_list(List, pos, circuit) # je comprends pas ce qu'est dest_in_list 
             
             else :
-                current_list = self.tri_liste_distances(pos, speed)
-                for dest in current_list:
+                for dest in List:
                     next_pos, next_speed = dest[0], dest[1]
-                    print(speed, next_speed)
                     next_list = self.tri_liste_distances(next_pos, next_speed)
                     return recursive_destination_test(next_list, level-1)
             
@@ -151,7 +151,8 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        dest = self.find_dest(circuit, init_pos, init_speed, 1)
+        dest = self.find_dest(circuit, init_pos, init_speed, 3)[0]
+        self.speed = self.find_dest(circuit, init_pos, init_speed, 1)[1]
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
