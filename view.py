@@ -1,3 +1,8 @@
+'''
+Dans ce module, on va créer la vue du circuit à l'aide de PyQt5. 
+On va afficher le circuit, les limites de piste et de secteurs et les voitures.
+'''
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
 from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
@@ -19,15 +24,14 @@ CIR_BRUSH = QBrush(QColor(CIR_COLOR))
 TRK_LIM_BRUSH = QBrush(QColor(TRK_LIM_COLOR))
 SEC_LIM_BRUSH = QBrush(QColor(SEC_LIM_COLOR))
 
-
-class View(QWidget): # Vue du circuit
+# Vue du circuit
+class View(QWidget): 
     def __init__(self, circuit):
         super().__init__()
-
         self.circuit = circuit
 
         # Création de la fenêtre
-        self.setWindowTitle(f'Race at {self.circuit.name}')
+        self.setWindowTitle(f'Course de voiture at {self.circuit.name}')
         self.resize(WIDTH, HEIGHT)
 
         # Affichage du circuit
@@ -42,14 +46,14 @@ class View(QWidget): # Vue du circuit
         root_layout.addWidget(self.view)
 
         self.view.keyPressEvent = self.keyPressEvent
-
         self.show()
 
     def add_circuit_items(self):
+        """ Ajoute tous les tracés du circuit """
         circuit_group = QGraphicsItemGroup()
         self.scene.addItem(circuit_group)
 
-        #Track limits
+        # Limites de la piste
         pen = QPen(QColor(TRK_LIM_COLOR), circuit.TRK_LIM_WIDTH)
         pen.setCapStyle(Qt.RoundCap)
 
@@ -62,7 +66,7 @@ class View(QWidget): # Vue du circuit
             item.setPen(pen)
             item.setToolTip(f'{line.name} LINE')
 
-        # Sector limits
+        # Limites des secteurs
         pen = QPen(QColor(SEC_LIM_COLOR), circuit.SEC_LIM_WIDTH)
         # for runway in self.circuit.runways:
         #     (p1, p2) = runway.coords
@@ -81,14 +85,17 @@ class View(QWidget): # Vue du circuit
         car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
         
     def move_car_items(self, car):
+        """ Déplace la voiture """
         car.move(self.circuit)
 
     def keyPressEvent(self, event): 
+        """ Déplace la voiture avec les touches directionnelles """
         if event.key() == Qt.Key_Right:
             car = self.scene.items()[0]
             self.move_car_items(car)
 
 def main():
     pass
+
 if __name__ == '__main__':
     main()

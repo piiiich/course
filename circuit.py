@@ -1,5 +1,6 @@
-# Dans ce module on va récupérer les limites de la piste et des secteurs et créer 
-# l'objet circuit correspondant
+'''
+Dans ce module on va récupérer les limites de la piste et des secteurs et créer l'objet circuit correspondant
+'''
 
 import numpy as np
 
@@ -36,17 +37,19 @@ class Circuit:
         self.dep = dep
 
 def coords_line(list):
-    # list représente une ligne de coordonnées dans le fichier texte [x0, y0, x1, y1, ...]
+    '''list représente une ligne de coordonnées dans le fichier texte [x0, y0, x1, y1, ...]'''
     
     xys = []
     for i in range(len(list)//2):
+
+        # On récupère une coordonnée sur deux pour avoir des couples (x, y)
         xys.append((int(list[2*i]), int(list[2*i+1])))
 
     # Renvoie une liste de coordonnées (x, y)
     return xys 
 
 def from_file(filename):
-    ''' Créer un circuit à partir d'un fichier texte contenant les données du circuit'''
+    ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit'''
     
     print(f'Loading circuit {filename} ...')
     file = open(filename)
