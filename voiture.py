@@ -104,11 +104,11 @@ class Voiture(QGraphicsEllipseItem):
         
         # Tri bubble pour trier les points possibles par distance à l'origine décroissante
         for i in range(n):
-            for j in range(0, n-i-1, 1):
+            for j in range(0, n-i-1):
                 if liste_distances[j][1] < liste_distances[j+1][1]:
                     liste_distances[j], liste_distances[j+1] = liste_distances[j+1], liste_distances[j]
 
-        return [tab[:2] for tab in liste_distances]
+        return [tab[:3] for tab in liste_distances]
             
     def dest_in_list(self, List, pos, circuit):
         for dest in List:
