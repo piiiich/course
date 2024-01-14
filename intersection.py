@@ -51,9 +51,12 @@ def x_sector(car, dest, init, circuit):
 
 def x_tracklimit(car, dest, init, circuit):
     """ Renvoie True si la voiture a traversé une limite de piste, False sinon """
+    print('hello')
     test = False
     for i in range(len(circuit.trackLimits)):
+        print('world')
         if segment_intersection(dest, init, circuit.trackLimits[car.current_sector].coords[0], circuit.trackLimits[car.current_sector+i].coords[1]):
+            print('test')
             test = True
     return test
 
