@@ -64,10 +64,7 @@ class Voiture(QGraphicsEllipseItem):
     def dest_is_valid(self, dest, pos, circuit):
         in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
         towards_end = X.direction_test(self, dest[0], pos, circuit)
-        if in_circuit and towards_end:
-            return True
-        else:
-            return False
+        return (in_circuit and towards_end)
 
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
@@ -99,7 +96,6 @@ class Voiture(QGraphicsEllipseItem):
                             Dests_list.pop()
             
         dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
-        print(Dests_list, dest)
         return dest
 
 
@@ -107,7 +103,7 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 4)
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
 
