@@ -33,10 +33,9 @@ def direction_test(car, dest, init, circuit):
     """ Renvoie True si la voiture va dans la bonne direction, False sinon """
     test = 0
     u = tuple(dest[i]-init[i] for i in (0, 1))
-    for j in range(len(circuit.trackLimits)):
-        v = tuple(circuit.trackLimits[car.current_sector+j].coords[1][i] - circuit.trackLimits[car.current_sector+j].coords[0][i] for i in (0, 1))
-        if np.dot(u, v) > 0:
-            test = True
+    v = tuple(circuit.trackLimits[0].coords[car.current_sector+1][i] - circuit.trackLimits[0].coords[car.current_sector][i] for i in (0, 1))
+    if np.dot(u, v) > 0:
+        test = True
     return test
 
 def x_sector(car, dest, init, circuit):
@@ -53,7 +52,7 @@ def x_tracklimit(car, dest, init, circuit):
     """ Renvoie True si la voiture a traversé une limite de piste, False sinon """
     print('hello')
     test = False
-    for i in range(len(circuit.trackLimits[0].coords)-1):
+    for i in range(10):
         crosses_ext = segment_intersection(dest, init, circuit.trackLimits[0].coords[car.current_sector+i], circuit.trackLimits[0].coords[car.current_sector+i+1])
         crosses_int = segment_intersection(dest, init, circuit.trackLimits[1].coords[car.current_sector+i], circuit.trackLimits[1].coords[car.current_sector+i+1])
         if crosses_ext or crosses_int:

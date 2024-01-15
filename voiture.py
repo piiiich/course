@@ -114,13 +114,15 @@ class Voiture(QGraphicsEllipseItem):
             # Condition d'arrêt si on atteint la profondeur voulue
             if level == 0:
                 print(List)
-                return self.dest_in_list(List, pos, circuit) # je comprends pas ce qu'est dest_in_list 
+                return self.dest_in_list(List, pos, circuit)
             
             else :
                 for dest in List:
                     next_pos, next_speed = dest[0], dest[1]
                     next_list = self.tri_liste_distances(next_pos, next_speed)
-                    return recursive_destination_test(next_list, level-1)
+                    next_dest = recursive_destination_test(next_list, level-1)
+                    if next_dest != None:
+                        return next_dest
             
         dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
         return dest
@@ -130,8 +132,7 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        dest = self.find_dest(circuit, init_pos, init_speed, 3)
-        print(dest)
+        dest = self.find_dest(circuit, init_pos, init_speed, 3)[0]
         self.speed = self.find_dest(circuit, init_pos, init_speed, 1)[1]
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
