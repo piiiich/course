@@ -151,7 +151,8 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        dest = self.find_dest(circuit, init_pos, init_speed, 3)[0]
+        dest = self.find_dest(circuit, init_pos, init_speed, 3)
+        print(dest)
         self.speed = self.find_dest(circuit, init_pos, init_speed, 1)[1]
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
