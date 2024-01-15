@@ -34,22 +34,31 @@ class Voiture(QGraphicsEllipseItem):
         return (self.x(), self.y())
        
 
-    def liste_distances(self, init_pos, init_speed):
-        ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), distance_a_l'origine) 
+    def dest_is_valid(self, dest, pos, circuit):
+        in_circuit = (not X.x_tracklimit(self, dest, pos, circuit))
+        towards_end = X.direction_test(self, dest, pos, circuit)
+        return (in_circuit and towards_end)
+
+    def coups_possibles(self, init_pos, init_speed, circuit):
+        ''' Cette fonction renvoie une liste de listes de la forme
+        [destination_testee_(x,y), vitesse_testee, distance_a_l'origine]  
         pour chaque coup possible ''' 
         liste_coups = []
         for point in self.range: # On parcours la matrice des 9 coups envisages
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
             test_dist = dist(init_pos, test_dest) # Distance à l'origine
-            liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
+            # print(test_dest, init_pos)
+            # ERROR: Dest is valid donne des points qu'on devrait pas pouvoir atteindre
+            if self.dest_is_valid(test_dest, init_pos, circuit):
+                liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
         return liste_coups
 
 
     def tri_liste_distances(self, pos, speed):  
         ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
-        liste_coups = self.liste_distances(pos, speed)
+        liste_coups = self.coups_possibles(pos, speed)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
     
@@ -64,11 +73,6 @@ class Voiture(QGraphicsEllipseItem):
         # Ou qu'on se trouve hors du circuit
         # Si on ne trouve pas de destination valide, on renvoie la position actuelle et une vitesse nulle
         return (self.position(), (0,0))
-    
-    def dest_is_valid(self, dest, pos, circuit):
-        in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
-        towards_end = X.direction_test(self, dest[0], pos, circuit)
-        return (in_circuit and towards_end)
 
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
@@ -79,35 +83,70 @@ class Voiture(QGraphicsEllipseItem):
         speed = init_speed
         Dests_list = []
         
-        def recursive_destination_test(List, depth):
-            level = depth
-            # Condition d'arrêt si on atteint la profondeur voulue
-            if level == 0:
-                Final_dest = self.dest_in_list(List, pos, circuit)
-                Dests_list.append(Final_dest)
-                return Final_dest
+        # def recursive_destination_test(List, depth):
+        #     level = depth
+        #     # Condition d'arrêt si on atteint la profondeur voulue
+        #     if level == 0:
+        #         Final_dest = self.dest_in_list(List, pos, circuit)
+        #         Dests_list.append(Final_dest)
+        #         return Final_dest
             
-            else :
-                for dest in List:
-                    if self.dest_is_valid(dest, pos, circuit):
-                        Dests_list.append(dest)
-                        next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
-                        next_list = self.tri_liste_distances(next_pos, next_speed)
-                        next_dest = recursive_destination_test(next_list, level-1)
-                        if next_dest != None:
-                            return next_dest
-                        else :
-                            Dests_list.pop()
+        #     else :
+        #         for dest in List:
+        #             if self.dest_is_valid(dest, pos, circuit):
+        #                 Dests_list.append(dest)
+        #                 next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
+        #                 # next_list = self.tri_liste_distances(next_pos, next_speed)
+        #                 next_list = self.coups_possibles(next_pos, next_speed)
+        #                 next_dest = recursive_destination_test(next_list, level-1)
+        #                 if next_dest != None:
+        #                     return next_dest
+        #                 else :
+        #                     Dests_list.pop()
             
-        dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
-        return dest
+        # dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
+        def creer_arbre_racine_profondeur(racine, profondeur_max):
+            if profondeur_max == 0:
+                return
+            distances = self.coups_possibles(racine.valeur[0], racine.valeur[1], circuit)
+
+            for _, distance in enumerate(distances):
+                valeur_enfant = distance
+                enfant = Noeud(valeur_enfant, racine)
+                racine.enfants.append(enfant)
+                creer_arbre_racine_profondeur(enfant, profondeur_max - 1)
+
+        # Exemple d'utilisation
+        racine = Noeud((init_pos, init_speed, 0))
+        profondeur_max = depth
+        creer_arbre_racine_profondeur(racine, profondeur_max)
+        # Max distance
+        max_node = [racine]
+        print(racine.enfants)
+        def depth_first_search(node):
+            # Traiter le nœud courant
+            # ICI IL FAUT GARDER LE MEILLEUR NOEUD (QUI A LA DISTANCE LA PLUS GRANDE)
+            max_node[0] = max(max_node[0], node, key=lambda x: x.valeur[2])
+
+            # Parcourir les enfants du nœud courant
+            for child in node.enfants:
+                depth_first_search(child)
+            
+        depth_first_search(racine)
+        max_node = max_node[0]
+        if max_node == racine:
+            print("On est dans le cas où on ne peut pas bouger")
+            return max_node.valeur[0], max_node.valeur[1]
+        while max_node.parent is not racine:
+            max_node = max_node.parent
+        return max_node.valeur[0], max_node.valeur[1]
 
 
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 3)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
 
@@ -127,3 +166,37 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+# Méthode pour générer un arbre de profondeur donnée
+# IL faut générer un arbre de possibilités
+# L'idée c'est que profondeur de l'arbre = nombre de coups d'affilée et chaque noeud de l'arbre correspond à une position et une vitesse
+class Noeud:
+    def __init__(self, valeur, parent=None):
+        self.valeur = valeur
+        self.parent = parent
+        self.enfants = []
+    def __repr__(self):
+        return f"Position : {self.valeur[0]}, Speed : {self.valeur[1]}, Distance : {self.valeur[2]}"
+
+    
+
+
+# # exemple d'utilisation
+# tree = create_tree()
+
+
+# Méthode de parcours en profondeur 
+
+
+
+# Après que tu as trouvé le meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
+# qu'on n'est pas juste avant la racine (depth = 1)
+# Puisque depth = 0 correspond à la postion actuelle
+    
+# # Exemple d'utilisation
+# tree = Node("A", [
+#     Node("B", [ Node("C"), Node("D")]),
+#     Node("E", [Node("F"), Node("G"), Node("H") ])
+# ])
+
+# depth_first_search(tree)

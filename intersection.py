@@ -29,11 +29,13 @@ def segment_intersection(A, B, C, D):
     CB = tuple([B[i]-C[i] for i in range(2)])
     return clockwise(AB, AC) * clockwise(AB, AD) <= 0 and clockwise(CD, CA) * clockwise(CD, CB) <= 0
 
+
 def direction_test(car, dest, init, circuit):
     """ Renvoie True si la voiture va dans la bonne direction, False sinon """
     u = tuple(dest[i]-init[i] for i in (0, 1))
     v = tuple(circuit.trackLimits[0].coords[car.current_sector+1][i] - circuit.trackLimits[0].coords[car.current_sector][i] for i in (0, 1))
     return np.dot(u, v) > 0
+
 
 def x_sector(car, dest, init, circuit):
     """ Renvoie un tuple avec True si la voiture a traversé une limite de secteur, False sinon et le nombre de secteurs traversés """
@@ -44,6 +46,7 @@ def x_sector(car, dest, init, circuit):
             test = True
             number += 1
     return test, number
+
 
 def x_tracklimit(car, dest, init, circuit):
     """ Renvoie True si la voiture a traversé une limite de piste, False sinon """
