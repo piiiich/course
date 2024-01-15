@@ -82,7 +82,6 @@ class Voiture(QGraphicsEllipseItem):
             test_dist = dist(init_pos, test_dest) # Distance à l'origine
             liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
-        print(f'liste_coups = {liste_coups}')
         return liste_coups
 
 
@@ -90,7 +89,6 @@ class Voiture(QGraphicsEllipseItem):
         ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
         liste_coups = self.liste_distances(pos, speed)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2])
-        print(f'liste_coups_triee {liste_coups_triee}')
         return liste_coups_triee
     
 
@@ -98,9 +96,6 @@ class Voiture(QGraphicsEllipseItem):
         for dest in List:
             in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
             towards_end = X.direction_test(self, dest[0], pos, circuit)
-
-            print(in_circuit, towards_end)
-
             if in_circuit and towards_end:
                 return dest
             else:
@@ -120,12 +115,11 @@ class Voiture(QGraphicsEllipseItem):
 
             # Condition d'arrêt si on atteint la profondeur voulue
             if level == 0:
-                print(List)
                 return self.dest_in_list(List, pos, circuit)
             
             else :
                 for dest in List:
-                    next_pos, next_speed = dest[0], dest[1]
+                    next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
                     next_list = self.tri_liste_distances(next_pos, next_speed)
                     next_dest = recursive_destination_test(next_list, level-1)
                     if next_dest != None:
@@ -138,9 +132,12 @@ class Voiture(QGraphicsEllipseItem):
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
+        print(init_speed)
 
-        dest = self.find_dest(circuit, init_pos, init_speed, 3)[0]
-        self.speed = self.find_dest(circuit, init_pos, init_speed, 1)[1]
+        prochain_etat = self.find_dest(circuit, init_pos, init_speed, 3)
+        dest = prochain_etat[0]
+        self.speed = prochain_etat[1]
+        print(self.speed)
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
