@@ -60,6 +60,10 @@ class Voiture(QGraphicsEllipseItem):
                 return dest
             else:
                 pass
+        # Si on rentre dans cette condition, c'est que dest_is_valid ne fonctionne pas correctement car il y a toujours une destination valide
+        # Ou qu'on se trouve hors du circuit
+        # Si on ne trouve pas de destination valide, on renvoie la position actuelle et une vitesse nulle
+        return (self.position(), (0,0))
     
     def dest_is_valid(self, dest, pos, circuit):
         in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
