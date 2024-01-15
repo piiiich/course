@@ -10,6 +10,7 @@ import intersection as X
 CAR_WIDTH = 70
 
 # Tri fusion 
+'''
 def merge(left, right):
         merged = []
         left_index = 0
@@ -38,6 +39,13 @@ def merge_sort(arr):
 
     return merge(merge_sort(left_half), merge_sort(right_half))
 
+
+        # liste_distances = self.liste_distances(init_pos, init_speed)
+        # Tri par fusion pour trier les points possibles par distance à l'origine décroissante
+        #liste_coups_triee = merge_sort(liste_coups) 
+        #print(f'liste_distances = {[tab[:3] for tab in liste_distances]}')
+        #return [tab[:3] for tab in liste_distances]
+'''
 
 class Voiture(QGraphicsEllipseItem):
     def __init__(self, ecurie, reach):
@@ -69,23 +77,22 @@ class Voiture(QGraphicsEllipseItem):
         pour chaque coup possible ''' 
         liste_coups = []
         for point in self.range: # On parcours la matrice des 9 coups envisages
-            # Vitesse obtenue pour le point sur lequel on boucle 
-            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
-            # (x, y) de la destination
-            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1]) 
-            # On rajoute la destination a la liste des coups
-            liste_coups.append([test_dest, test_speed])  
-        return [dests + [dist(init_pos, dests[0])] for dests in liste_coups]
-
-
-    def tri_liste_distances(self, init_pos, init_speed):
-        ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse) '''
-        liste_distances = self.liste_distances(init_pos, init_speed)
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
+            test_dist = dist(init_pos, test_dest) # Distance à l'origine
+            liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
-        # Tri par fusion pour trier les points possibles par distance à l'origine décroissante
-        liste_distances = merge_sort(liste_distances)
-        return [tab[:3] for tab in liste_distances]
+        print(f'liste_coups = {liste_coups}')
+        return liste_coups
 
+
+    def tri_liste_distances(self, pos, speed): # init_pos, init_speed):
+        ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
+        liste_coups = self.liste_distances(pos, speed)
+        liste_coups_triee = sorted(liste_coups, key = lambda x : x[2])
+        print(f'liste_coups_triee {liste_coups_triee}')
+        return liste_coups_triee
+    
 
     def dest_in_list(self, List, pos, circuit):
         for dest in List:
