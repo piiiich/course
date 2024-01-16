@@ -21,6 +21,7 @@
 
         return dest'''
 
+# Tri bubble
 '''
     def tri_liste_distances(self, init_pos, init_speed):
         # Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse)

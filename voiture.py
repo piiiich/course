@@ -1,5 +1,4 @@
-'''
-Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
+''' Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
 '''
 
 from PyQt5.QtWidgets import QGraphicsEllipseItem
@@ -23,12 +22,13 @@ class Voiture(QGraphicsEllipseItem):
         # elif self.ecurie == "Mercedes":
         #     self.color = "Cyan"
 
-    # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. 
-    # les distances (en pixels) ne sont pas équivalentes dans les deux cas si on les ramène à des metres
+        # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. 
+        # les distances (en pixels) ne sont pas équivalentes dans les deux cas si on les ramène à des metres
         # 8 états possibles par défaut de la voiture
         self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
+
 
     def position(self):
         return (self.x(), self.y())
@@ -39,31 +39,48 @@ class Voiture(QGraphicsEllipseItem):
         towards_end = X.direction_test(self, dest, pos, circuit)
         return (in_circuit and towards_end)
 
+
     def coups_possibles(self, init_pos, init_speed, circuit):
-        ''' Cette fonction renvoie une liste de listes de la forme
-        [destination_testee_(x,y), vitesse_testee, distance_a_l'origine]  
-        pour chaque coup possible ''' 
+        ''' 
+        Cette fonction renvoie une liste de listes des 9 coups possibles de la forme
+        [destination_testee_(x,y), vitesse_testee, distance_a_l'origine] 
+        init_pos : position actuelle de la voiture
+        init_speed : vitesse actuelle de la voiture
+        circuit : circuit sur lequel se déroule la course
+        ''' 
         liste_coups = []
-        for point in self.range: # On parcours la matrice des 9 coups envisages
-            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
-            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
-            test_dist = dist(init_pos, test_dest) # Distance à l'origine
-            # print(test_dest, init_pos)
+        # On parcours la matrice des 9 coups envisages
+        for point in self.range: 
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])  # Vitesse obtenue pour le point testé 
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination testée
+            test_dist = dist(init_pos, test_dest)  # Distance à l'origine par rapport au point testé
             # ERROR: Dest is valid donne des points qu'on devrait pas pouvoir atteindre
+            
             if self.dest_is_valid(test_dest, init_pos, circuit):
-                liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
+                # On rajoute le point testé et ses caractéristiques a la liste des coups possibles
+                liste_coups.append([test_dest, test_speed, test_dist]) 
         
         return liste_coups
 
 
     def tri_liste_distances(self, pos, speed):  
-        ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
+        ''' 
+        Cette fonction trie la liste des coups possibles par distance au point de départ décroissante 
+        pos : position actuelle de la voiture
+        speed : vitesse actuelle de la voiture
+        '''
         liste_coups = self.coups_possibles(pos, speed)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
     
 
     def dest_in_list(self, List, pos, circuit):
+        ''' 
+        Cette fonction renvoie la première destination valide de la liste des coups possibles 
+        List : liste des coups possibles
+        pos : position actuelle de la voiture
+        circuit : circuit sur lequel se déroule la course
+        '''
         for dest in List:
             if self.dest_is_valid(dest, pos, circuit):
                 return dest
@@ -74,14 +91,19 @@ class Voiture(QGraphicsEllipseItem):
         # Si on ne trouve pas de destination valide, on renvoie la position actuelle et une vitesse nulle
         return (self.position(), (0,0))
 
+
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
-        Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
-        et de sa vitesse. On réalise un parcours en profondeur de profondeur depth.
+        Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position et de sa vitesse initiales. 
+        On réalise un parcours en profondeur.
+        circuit : circuit sur lequel se déroule la course
+        init_pos : position actuelle de la voiture
+        init_speed : vitesse actuelle de la voiture
+        depth : profondeur de l'arbre de recherche
         '''
-        pos = init_pos
-        speed = init_speed
-        Dests_list = []
+        # pos = init_pos
+        # speed = init_speed
+        # Dests_list = []
         
         # def recursive_destination_test(List, depth):
         #     level = depth
