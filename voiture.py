@@ -85,6 +85,7 @@ class Voiture(QGraphicsEllipseItem):
             if self.dest_is_valid(dest, pos, circuit):
                 return dest
             else:
+                print("le code marche pas")
                 pass
         # Si on rentre dans cette condition, c'est que dest_is_valid ne fonctionne pas correctement car il y a toujours une destination valide
         # Ou qu'on se trouve hors du circuit
@@ -94,7 +95,7 @@ class Voiture(QGraphicsEllipseItem):
 
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
-        Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position et de sa vitesse initiales. 
+        Cette fonction renvoie la destination optimale pour la voiture en fonction de son couple (position ,vitesse) initial. 
         On réalise un parcours en profondeur.
         circuit : circuit sur lequel se déroule la course
         init_pos : position actuelle de la voiture
@@ -211,7 +212,7 @@ class Noeud:
 
 
 
-# Après que tu as trouvé le meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
+# Après que tu aies trouvé le meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
 # qu'on n'est pas juste avant la racine (depth = 1)
 # Puisque depth = 0 correspond à la postion actuelle
     
