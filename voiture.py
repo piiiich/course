@@ -34,7 +34,7 @@ class Voiture(QGraphicsEllipseItem):
         return (self.x(), self.y())
        
 
-    def liste_distances(self, init_pos, init_speed):
+    def liste_distances(self, init_pos, init_speed, circuit):
         ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), distance_a_l'origine) 
         pour chaque coup possible ''' 
         liste_coups = []
@@ -42,14 +42,15 @@ class Voiture(QGraphicsEllipseItem):
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
             test_dist = dist(init_pos, test_dest) # Distance à l'origine
-            liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
+            if self.dest_is_valid(test_dest, init_pos, circuit):
+                liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
         return liste_coups
 
 
-    def tri_liste_distances(self, pos, speed):  
+    def coups_ok_sorted(self, pos, speed, circuit):  
         ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
-        liste_coups = self.liste_distances(pos, speed)
+        liste_coups = self.liste_distances(pos, speed, circuit)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
     
@@ -75,27 +76,24 @@ class Voiture(QGraphicsEllipseItem):
         speed = init_speed
         Dests_list = []
         
-        def recursive_destination_test(List, depth):
-            level = depth
+        def recursive_destination_test(pos, speed, depth):
+            List = self.tri_liste_distances(pos, speed)
             # Condition d'arrêt si on atteint la profondeur voulue
-            if level == 0:
-                Final_dest = self.dest_in_list(List, pos, circuit)
-                Dests_list.append(Final_dest)
-                return Final_dest
+            if depth == 0:
+                return (pos, speed)
             
             else :
                 for dest in List:
-                    if self.dest_is_valid(dest, pos, circuit):
                         Dests_list.append(dest)
                         next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
                         next_list = self.tri_liste_distances(next_pos, next_speed)
-                        next_dest = recursive_destination_test(next_list, level-1)
+                        next_dest = recursive_destination_test(next_list, depth-1)
                         if next_dest != None:
                             return next_dest
                         else :
                             Dests_list.pop()
             
-        dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
+        dest = recursive_destination_test(pos, speed, depth)
         return dest
 
 
