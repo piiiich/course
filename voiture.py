@@ -1,4 +1,5 @@
-''' Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
+''' Baptiste
+Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
 '''
 
 from PyQt5.QtWidgets import QGraphicsEllipseItem
