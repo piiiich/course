@@ -43,35 +43,30 @@ class Voiture(QGraphicsEllipseItem):
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
             test_dist = dist(init_pos, test_dest) # Distance à l'origine
-            if self.dest_is_valid([test_dest], init_pos, circuit):
+            if self.dest_is_valid(test_dest, init_pos, circuit):
                 liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
-        return liste_coups
-
-
-    def coups_ok_sorted(self, pos, speed, circuit):  
-        ''' Cette fonction renvoie une liste de tuples (point_destination_(x,y), vitesse, distance) '''
-        liste_coups = self.liste_distances(pos, speed, circuit)
+        #On trie ensuite la liste des coups par ordre décroissant de distances parcourues
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
-    
 
-    def dest_in_list(self, List, pos, circuit):
-        for dest in List:
-            if self.dest_is_valid(dest, pos, circuit):
-                return dest
-            else:
-                pass
+
     
     def dest_is_valid(self, dest, pos, circuit):
-        in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
-        towards_end = X.direction_test(self, dest[0], pos, circuit)
-        return (in_circuit and towards_end)
+        """
+        Cette méthode vérifie que la destination proposée est valide c'est à dire qu'elle est dans le circuit et qu'elle ne va pas en arrière
+        On utilise X ~ intersection pour vérifier qu'on ne croise pas les limites du circuit
+        """
+        in_circuit = (not X.x_tracklimit(self, dest, pos, circuit))
+        towards_end = X.direction_test(self, dest, pos, circuit)
+
+        return (in_circuit and towards_end)  #Le booléen retourné ne sera vrai que si les deux conditions sont réunies.
+    
 
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
-        Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
-        et de sa vitesse. On réalise un parcours en profondeur de profondeur depth.
+        Cette méthode renvoie la destination optimale pour la voiture en fonction de sa position 
+        et de sa vitesse. On réalise un parcours en profondeur de profondeur "depth".
         '''
         pos = init_pos
         speed = init_speed
@@ -84,9 +79,9 @@ class Voiture(QGraphicsEllipseItem):
                 return [pos, speed]
                     
             else :
-                List = self.coups_ok_sorted(pos, speed, circuit)
+                List = self.liste_distances(pos, speed, circuit)
                 for dest in List:
-                    next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
+                    next_pos, next_speed = dest, tuple(speed[i]+dest[1][i] for i in (0, 1))
                     return [pos, speed], recursive_destination_test(next_pos, next_speed, level-1)
             # trouver un format pour que find_dest renvoie un tableau de tous les points du chemin à parcourir
         for dest in recursive_destination_test(pos, speed, depth):
