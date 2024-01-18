@@ -53,35 +53,36 @@ class Circuit:
                 intersection.segment_intersection(init, dest, b, d))
 
 
-def coords_line(list):
+def coords_line(lst):
     '''list représente une ligne de coordonnées dans le fichier texte [x0, y0, x1, y1, ...]'''
-    xys = []
-    for i in range(len(list)//2):
-        # On récupère une coordonnée sur deux pour avoir des couples (x, y)
-        xys.append((int(list[2*i]), int(list[2*i+1])))
-    # Renvoie une liste de coordonnées (x, y)
-    return xys 
+    # On récupère une coordonnée sur deux pour avoir des couples (x, y)
+    return [(int(lst[2*i]), int(lst[2*i+1])) for i in range(len(lst)//2)]
 
 
 def from_file(filename):
     ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit'''
     print(f'Loading circuit {filename} ...')
-    file = open(filename)
-    # On lit le nom du circuit
-    name = file.readline().strip() 
-    Ext, Int= [], []
-    # On lit les limites intérieure et extérieure de la piste et les coordonnées du départ
-    for line in file:
-        words = line.strip().split()
-        if words[0] == "Exterieur":
-            Ext = coords_line(words[1:])
-        elif words[0] == "Interieur":
-            Int = coords_line(words[1:])
-        elif words[0] == "Depart":
-            Dep = [(int(words[1]), int(words[2])), (int(words[3]), int(words[4]))]
-    file.close()
-    # On crée le circuit
-    return Circuit(name, (TrackLimit("EXTERIOR", Ext), TrackLimit("INTERIOR", Int)), Dep)
+    with open(filename) as file:
+        # On lit le nom du circuit
+        name = file.readline().strip()
+        # On initialise les limites extérieures et intérieures à None
+        ext_limits, int_limits, dep = None, None, None
+        # On lit les limites intérieure et extérieure de la piste et les coordonnées du départ
+        for line in file:
+            words = line.strip().split()
+            if words[0] == "Exterieur":
+                ext_limits = coords_line(words[1:])
+            elif words[0] == "Interieur":
+                int_limits = coords_line(words[1:])
+            elif words[0] == "Depart":
+                dep = [(int(words[1]), int(words[2])), (int(words[3]), int(words[4]))]
+        # On vérifie si les limites extérieures et intérieures sont spécifiées
+        if ext_limits is None or int_limits is None:
+            raise ValueError("Both exterior and interior limits must be specified in the file.")
+        # On crée le circuit
+        return Circuit(name, (TrackLimit("EXTERIOR", ext_limits), TrackLimit("INTERIOR", int_limits)), dep)
+
+
 
 def main():
     pass

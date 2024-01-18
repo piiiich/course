@@ -3,12 +3,14 @@ Dans ce module, on va créer la vue du circuit à l'aide de PyQt5.
 On va afficher le circuit, les limites de piste et de secteurs et les voitures.
 '''
 
+import circuit
+import voiture
+
 import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
 from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
-import circuit
-import voiture
+
 # from pan_zoom_view import PanZoomView
 
 # Largeur et hauteur de la fenêtre

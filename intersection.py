@@ -63,6 +63,18 @@ def x_tracklimit(car, dest, init, circuit):
                                            circuit.trackLimits[1].coords[car.current_sector+i+1])
         return (crosses_ext or crosses_int)
 
+# Suggestion Chatgpt :
+'''
+def x_tracklimit(car, dest, init, circuit):
+    """ Renvoie True si la voiture a traversé une limite de piste, False sinon """
+    crosses_ext = segment_intersection(dest, init, 
+                                       circuit.trackLimits[0].coords[car.current_sector], 
+                                       circuit.trackLimits[0].coords[car.current_sector+1])
+    crosses_int = segment_intersection(dest, init, 
+                                       circuit.trackLimits[1].coords[car.current_sector], 
+                                       circuit.trackLimits[1].coords[car.current_sector+1])
+    return crosses_ext or crosses_int
+'''
 
 def backward(dest, init, init_sector, circuit):
     # Renvoie si la voiture revient vers la portion précédente
@@ -71,3 +83,12 @@ def backward(dest, init, init_sector, circuit):
     d_init = np.linalg.det([ab, vect(a, init)])
     d_dest = np.linalg.det([ab, vect(a, dest)])
     return d_init * d_dest < 0
+
+# Suggestion de Chatgpt : 
+'''
+def backward(dest, init, init_sector, circuit):
+    # Renvoie si la voiture revient vers la portion précédente
+    a, b = circuit.sectorLimits[init_sector].coords
+    d_init_dest = np.linalg.det([vect(a, b), vect(a, init), vect(a, dest)])
+    return d_init_dest < 0
+'''

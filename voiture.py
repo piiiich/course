@@ -73,6 +73,7 @@ class Voiture(QGraphicsEllipseItem):
         towards_end = X.direction_test(self, dest[0], pos, circuit)
         return (in_circuit and towards_end)
 
+    '''
     def find_dests(self, circuit, init_pos, init_speed, depth):
         ''' 
         Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
@@ -104,7 +105,8 @@ class Voiture(QGraphicsEllipseItem):
             
         dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
         return dest
-
+    '''
+        
     # Correction JBG
     def find_dest(self, circuit, depth):
         '''
@@ -154,3 +156,116 @@ def main():
 if __name__ == "__main__":
     main()
 
+'''Suggestion Chatgpt : à voir quoi prendre en compte
+from PyQt5.QtWidgets import QGraphicsEllipseItem
+import numpy as np
+import intersection as X
+
+# Largeur de la voiture
+CAR_WIDTH = 70
+
+class Etat(QGraphicsEllipseItem):
+    def __init__(self, pos, speed, sector):
+        super().__init__()
+        self.pos = pos
+        self.speed = speed
+        self.sector = sector
+        self.dist = dist(pos, speed)
+
+    def __repr__(self):
+        return f"Etat({self.pos}, {self.speed}, {self.sector}, {self.dist})"
+
+
+class Voiture(QGraphicsEllipseItem):
+    def __init__(self, ecurie, reach):
+        super().__init__()
+        self.color = "Black"
+        self.speed = (0, 0)
+        self.current_sector = 0
+        self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
+                      (-reach, 0), (0, 0), (+reach, 0),
+                      (-reach, +reach), (0, +reach), (+reach, +reach)]
+
+    def __repr__(self):
+        return f"Voiture({self.color}, {self.speed}, {self.current_sector})"
+
+    def position(self):
+        return (self.x(), self.y())
+
+    def liste_distances(self, init_pos, init_speed):
+        liste_coups = []
+        for point in self.range:
+            test_speed = tuple(init_speed[i] + point[i] for i in [0, 1])
+            test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])
+            test_dist = dist(init_pos, test_dest)
+            liste_coups.append((test_dest, test_speed, test_dist))
+        return liste_coups
+
+    def tri_liste_distances(self, pos, speed):
+        liste_coups = self.liste_distances(pos, speed)
+        liste_coups_triee = sorted(liste_coups, key=lambda x: x[2], reverse=True)
+        return liste_coups_triee
+
+    def dest_in_list(self, List, pos, circuit):
+        for dest in List:
+            if self.dest_is_valid(dest, pos, circuit):
+                return dest
+        return None
+
+    def dest_is_valid(self, dest, pos, circuit):
+        in_circuit = (not X.x_tracklimit(self, dest[0], pos, circuit))
+        towards_end = X.direction_test(self, dest[0], pos, circuit)
+        return (in_circuit and towards_end)
+
+    def find_dests(self, circuit, init_pos, init_speed, depth):
+        pos = init_pos
+        speed = init_speed
+        Dests_list = []
+
+        def recursive_destination_test(List, depth):
+            if depth == 0:
+                Final_dest = self.dest_in_list(List, pos, circuit)
+                Dests_list.append(Final_dest)
+                return Final_dest
+            else:
+                for dest in List:
+                    if self.dest_is_valid(dest, pos, circuit):
+                        Dests_list.append(dest)
+                        next_pos, next_speed = dest[0], tuple(speed[i] + dest[1][i] for i in (0, 1))
+                        next_list = self.tri_liste_distances(next_pos, next_speed)
+                        next_dest = recursive_destination_test(next_list, depth - 1)
+                        if next_dest:
+                            return next_dest
+                        Dests_list.pop()
+
+        dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
+        return dest
+
+    def find_dest(self, circuit, depth):
+        def rec_find(pos, speed, sector, depth):
+            if depth == 0 or len(circuit.sectorLimits) <= sector:
+                return (pos, speed, sector)
+            else:
+                moves = []
+                for dest, new_speed, dist in self.liste_distances(pos, speed):
+                    new_sector = X.dest_sector(dest, pos, sector, circuit)
+                    if not (X.tracklimit(dest, pos, new_sector, circuit) or
+                            X.backward(dest, pos, sector, circuit)):
+                        moves.append((dest, new_speed, new_sector, dist))
+                moves.sort(key=lambda x: -x[3])
+                for dest, new_speed, new_sector, dist in moves:
+                    if rec_find(dest, new_speed, new_sector, depth - 1):
+                        return (dest, new_speed, new_sector)
+
+        return rec_find(self.position(), self.speed, self.current_sector, depth)
+
+    def move(self, circuit):
+        init_pos = self.position()
+        init_speed = self.speed
+
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
+        dest = prochain_etat[0]
+        self.speed = prochain_etat[1]
+
+        self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
+'''
