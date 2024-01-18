@@ -128,15 +128,9 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-<<<<<<< Updated upstream
         prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
-=======
-        # prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
-        dest, self.speed, self.current_sector = self.find_dest(circuit, 7)
-        # self.speed = prochain_etat[1]
->>>>>>> Stashed changes
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
