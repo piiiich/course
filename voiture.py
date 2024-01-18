@@ -75,10 +75,8 @@ class Voiture(QGraphicsEllipseItem):
 
     '''
     def find_dests(self, circuit, init_pos, init_speed, depth):
-        ''' 
-        Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
-        et de sa vitesse. On réalise un parcours en profondeur de profondeur depth.
-        '''
+        # Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
+        # et de sa vitesse. On réalise un parcours en profondeur de profondeur depth.
         pos = init_pos
         speed = init_speed
         Dests_list = []
@@ -136,7 +134,7 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
+        prochain_etat = self.find_dest(circuit, 0)  # init_pos, init_speed, 0)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
 
@@ -155,6 +153,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 '''Suggestion Chatgpt : à voir quoi prendre en compte
 from PyQt5.QtWidgets import QGraphicsEllipseItem
