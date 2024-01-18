@@ -63,7 +63,7 @@ class Voiture(QGraphicsEllipseItem):
         return liste_coups
 
 
-    def tri_liste_distances(self, pos, speed):  
+    def tri_liste_coups(self, pos, speed):  
         ''' 
         Cette fonction trie la liste des coups possibles par distance au point de départ décroissante 
         pos : position actuelle de la voiture
@@ -211,7 +211,8 @@ class Noeud:
 
 
 
-# Après que tu as trouvé le meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
+# Après que tu as trouvé le 
+    meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
 # qu'on n'est pas juste avant la racine (depth = 1)
 # Puisque depth = 0 correspond à la postion actuelle
     
