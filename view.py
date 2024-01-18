@@ -3,12 +3,13 @@ Dans ce module, on va créer la vue du circuit à l'aide de PyQt5.
 On va afficher le circuit, les limites de piste et de secteurs et les voitures.
 '''
 
+import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
 from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
 import circuit
 import voiture
-from pan_zoom_view import PanZoomView
+# from pan_zoom_view import PanZoomView
 
 # Largeur et hauteur de la fenêtre
 WIDTH = 800
@@ -37,12 +38,15 @@ class View(QWidget):
         # Affichage du circuit
         root_layout = QVBoxLayout(self)
         self.scene = QGraphicsScene()
-        self.view = PanZoomView(self.scene)
-
+        # self.view = PanZoomView(self.scene)
+        self.view = PyQt5.QtWidgets.QGraphicsView(self.scene)
+        
         # Ajout des tracés
         self.add_circuit_items()
         self.add_car_items()
-        self.view.fit_scene_in_view()
+        # self.view.fit_scene_in_view()
+        self.view.fitInView(self.view.sceneRect(), PyQt5.QtCore.Qt.KeepAspectRatio)
+
         root_layout.addWidget(self.view)
 
         self.view.keyPressEvent = self.keyPressEvent
@@ -82,8 +86,9 @@ class View(QWidget):
         self.scene.addItem(car)
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
-        car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
-        
+        # car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        car.setPos(1 + (self.circuit.dep[0][0]+self.circuit.dep[1][0])//2,
+                   (self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
     def move_car_items(self, car):
         """ Déplace la voiture """
         car.move(self.circuit)

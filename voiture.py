@@ -98,21 +98,52 @@ class Voiture(QGraphicsEllipseItem):
         dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
         return dest
 
+    # Correction JBG
+    def find_dest(self, circuit, depth):
+        '''
+        Renvoie un triplet (position, vitesse, portion) envisageable
+        pour le prochain déplacement de la voiture
+        '''
+        def rec_find(pos, speed, sector, depth):
+            # Renvoie None ou le triplet
+            if depth == 0 or len(circuit.sectorLimits) <= sector:
+                return (pos, speed, sector)
+            else:
+                moves = []
+                for dest, new_speed, dist in self.liste_distances(pos, speed):
+                    new_sector = X.dest_sector(dest, pos, sector, circuit)
+                    if not(X.tracklimit(dest, pos, new_sector, circuit) or
+                           X.backward(dest, pos, sector, circuit)):
+                        moves.append((dest, new_speed, new_sector, dist))
+                moves.sort(key=lambda x:-x[3])
+                for dest, new_speed, new_sector, dist in moves:
+                    if rec_find(dest, new_speed, new_sector, depth - 1):
+                        return (dest, new_speed, new_sector)
 
+        return rec_find(self.position(), self.speed, self.current_sector, depth)
+                
+
+    
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
 
+<<<<<<< Updated upstream
         prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
+=======
+        # prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
+        dest, self.speed, self.current_sector = self.find_dest(circuit, 7)
+        # self.speed = prochain_etat[1]
+>>>>>>> Stashed changes
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
-        crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
-        if crosses_sector:
-            self.current_sector += sectors_crossed
-
+        
+        # crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
+        # if crosses_sector:
+        #    self.current_sector += sectors_crossed
 
 def dist(A, B):
     return np.sqrt((A[0] - B[0])**2 + (A[1] - B[1])**2)

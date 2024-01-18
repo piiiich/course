@@ -51,3 +51,32 @@ def x_tracklimit(car, dest, init, circuit):
         crosses_ext = segment_intersection(dest, init, circuit.trackLimits[0].coords[car.current_sector+i], circuit.trackLimits[0].coords[car.current_sector+i+1])
         crosses_int = segment_intersection(dest, init, circuit.trackLimits[1].coords[car.current_sector+i], circuit.trackLimits[1].coords[car.current_sector+i+1])
         return (crosses_ext or crosses_int)
+
+# Correction JBG
+
+def dest_sector(dest, init, init_sector, circuit):
+    # Renvoie l'indice de portion de dest
+    sector = init_sector
+    while True:
+        sector = (sector + 1) % len(circuit.sectorLimits)
+        a, b = circuit.sectorLimits[sector].coords
+        if not segment_intersection(init, dest, a, b): break
+    return sector - 1
+
+def tracklimit(dest, init, sector, circuit):
+    # Renvoie si le déplacement sort du circuit
+    a, b = circuit.sectorLimits[sector].coords
+    c, d = circuit.sectorLimits[(sector + 1) % len(circuit.sectorLimits)].coords
+    return (segment_intersection(init, dest, a, c) or
+            segment_intersection(init, dest, b, d))
+
+def vect(a, b):
+    return tuple(b[i] - a[i] for i in range(2))
+
+def backward(dest, init, init_sector, circuit):
+    # Renvoie si la voiture revient vers la portion précédente
+    a, b = circuit.sectorLimits[init_sector].coords
+    ab = vect(a, b)
+    d_init = np.linalg.det([ab, vect(a, init)])
+    d_dest = np.linalg.det([ab, vect(a, dest)])
+    return d_init * d_dest < 0
