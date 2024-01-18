@@ -1,6 +1,6 @@
 '''
 Mathis et Gaspard
-Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
+Dans ce module, on crée la classe Voiturame pour définir les voitures de la course et leurs déplacements. 
 '''
 
 from PyQt5.QtWidgets import QGraphicsEllipseItem
@@ -75,28 +75,31 @@ class Voiture(QGraphicsEllipseItem):
         '''
         pos = init_pos
         speed = init_speed
+        path = []
         
         def recursive_destination_test(pos, speed, depth):
+            level = depth
             # Condition d'arrêt si on atteint la profondeur voulue
-            if depth == 0:
+            if level == 0:
                 return [pos, speed]
                     
             else :
                 List = self.coups_ok_sorted(pos, speed, circuit)
-                print(List)
                 for dest in List:
                     next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
-                    return [[pos, speed], recursive_destination_test(next_pos, next_speed, depth-1)]
-            
-        dest = recursive_destination_test(pos, speed, depth)
-        return dest
+                    return [pos, speed], recursive_destination_test(next_pos, next_speed, level-1)
+            # trouver un format pour que find_dest renvoie un tableau de tous les points du chemin à parcourir
+        for dest in recursive_destination_test(pos, speed, depth):
+            path.append(dest)
+        return path
 
 
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 2)
+        print(prochain_etat)
         dest = prochain_etat[-1][0]
         self.speed = prochain_etat[-1][1]        
 
