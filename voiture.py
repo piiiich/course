@@ -211,8 +211,7 @@ class Noeud:
 
 
 
-# Après que tu as trouvé le 
-    meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
+# Après que tu as trouvé le meilleur noeud, il faut que tu récupères le parent de ce noeud tant 
 # qu'on n'est pas juste avant la racine (depth = 1)
 # Puisque depth = 0 correspond à la postion actuelle
     
