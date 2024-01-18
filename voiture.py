@@ -43,7 +43,7 @@ class Voiture(QGraphicsEllipseItem):
             test_speed = tuple(init_speed[i] + point[i] for i in [0, 1]) # Vitesse obtenue pour le point sur lequel on boucle 
             test_dest = tuple(init_pos[i] + test_speed[i] for i in [0, 1])  # (x, y) de la destination
             test_dist = dist(init_pos, test_dest) # Distance à l'origine
-            if self.dest_is_valid(test_dest, init_pos, circuit):
+            if self.dest_is_valid([test_dest], init_pos, circuit):
                 liste_coups.append([test_dest, test_speed, test_dist])     # On rajoute la destination a la liste des coups
         
         return liste_coups
@@ -75,24 +75,18 @@ class Voiture(QGraphicsEllipseItem):
         '''
         pos = init_pos
         speed = init_speed
-        Dests_list = []
         
         def recursive_destination_test(pos, speed, depth):
-            List = self.tri_liste_distances(pos, speed)
             # Condition d'arrêt si on atteint la profondeur voulue
             if depth == 0:
-                return (pos, speed)
-            
+                return [pos, speed]
+                    
             else :
+                List = self.coups_ok_sorted(pos, speed, circuit)
+                print(List)
                 for dest in List:
-                        Dests_list.append(dest)
-                        next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
-                        next_list = self.tri_liste_distances(next_pos, next_speed)
-                        next_dest = recursive_destination_test(next_list, depth-1)
-                        if next_dest != None:
-                            return next_dest
-                        else :
-                            Dests_list.pop()
+                    next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
+                    return [[pos, speed], recursive_destination_test(next_pos, next_speed, depth-1)]
             
         dest = recursive_destination_test(pos, speed, depth)
         return dest
@@ -102,9 +96,9 @@ class Voiture(QGraphicsEllipseItem):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 0)
-        dest = prochain_etat[0]
-        self.speed = prochain_etat[1]
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
+        dest = prochain_etat[-1][0]
+        self.speed = prochain_etat[-1][1]        
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
