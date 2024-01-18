@@ -8,7 +8,6 @@ from view import View
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
 # Nom du fichier texte contenant les caractéristiques de notre circuit
-#CIR_FILE = "course/DATA/Monaco.txt"
 CIR_FILE = "DATA/Monaco.txt"
 
 def main():

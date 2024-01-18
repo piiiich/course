@@ -9,26 +9,33 @@ import intersection as X
 # Largeur de la voiture
 CAR_WIDTH = 70
 
+
+# Classe Etat pour définir les états de la voiture : position, vitesse, secteur et distance à l'origine
+class Etat(QGraphicsEllipseItem):
+    def __init__(self, pos, speed, sector):
+        self.pos = pos
+        self.speed = speed
+        self.sector = sector
+        self.dist = dist(pos, speed)
+
+    def __repr__(self):
+        return f"Etat({self.pos}, {self.speed}, {self.sector}, {self.dist})"
+
+
+# Classe Voiture pour définir les voitures de la course
 class Voiture(QGraphicsEllipseItem):
     def __init__(self, ecurie, reach):
         super().__init__()
-        self.ecurie = ecurie
+        # self.ecurie = ecurie
         self.color = "Black"
         self.speed = (0, 0)
         self.current_sector = 0
-        # if self.ecurie == "Ferrari" :
-        #     self.color = "Red"
-        # elif self.ecurie == "Red Bull":
-        #     self.color = "Blue"
-        # elif self.ecurie == "Mercedes":
-        #     self.color = "Cyan"
-
-    # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. 
-    # les distances (en pixels) ne sont pas équivalentes dans les deux cas si on les ramène à des metres
-        # 8 états possibles par défaut de la voiture
         self.range = [(-reach, -reach), (0, -reach), (+reach, -reach),
                       (-reach, 0)     , (0, 0)     , (+reach, 0)     ,
                       (-reach, +reach), (0, +reach), (+reach, +reach)]
+
+    def __repr__(self):
+        return f"Voiture({self.color}, {self.speed}, {self.current_sector})"
 
     def position(self):
         return (self.x(), self.y())
@@ -122,7 +129,6 @@ class Voiture(QGraphicsEllipseItem):
 
         return rec_find(self.position(), self.speed, self.current_sector, depth)
                 
-
     
     def move(self, circuit):
         init_pos = self.position()
@@ -134,7 +140,7 @@ class Voiture(QGraphicsEllipseItem):
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
-        
+    
         # crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
         # if crosses_sector:
         #    self.current_sector += sectors_crossed
