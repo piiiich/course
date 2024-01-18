@@ -63,13 +63,13 @@ class Voiture(QGraphicsEllipseItem):
         return liste_coups
 
 
-    def tri_liste_coups(self, pos, speed):  
+    def tri_liste_coups(self, pos, speed, circuit):  
         ''' 
         Cette fonction trie la liste des coups possibles par distance au point de départ décroissante 
         pos : position actuelle de la voiture
         speed : vitesse actuelle de la voiture
         '''
-        liste_coups = self.coups_possibles(pos, speed)
+        liste_coups = self.coups_possibles(pos, speed, circuit)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
     
@@ -129,12 +129,14 @@ class Voiture(QGraphicsEllipseItem):
             
         # dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
         def creer_arbre_racine_profondeur(racine, profondeur_max):
+            
             if profondeur_max == 0:
-                return
-            distances = self.coups_possibles(racine.valeur[0], racine.valeur[1], circuit)
+                return racine
+            
+            coups = self.tri_liste_coups(racine.valeur[0], racine.valeur[1], circuit)
 
-            for _, distance in enumerate(distances):
-                valeur_enfant = distance
+            for coup in coups:
+                valeur_enfant = coup
                 enfant = Noeud(valeur_enfant, racine)
                 racine.enfants.append(enfant)
                 creer_arbre_racine_profondeur(enfant, profondeur_max - 1)
@@ -144,6 +146,10 @@ class Voiture(QGraphicsEllipseItem):
         profondeur_max = depth
         creer_arbre_racine_profondeur(racine, profondeur_max)
         # Max distance
+        print(racine.enfants)
+        
+
+        '''
         max_node = [racine]
         print(racine.enfants)
         def depth_first_search(node):
@@ -163,13 +169,13 @@ class Voiture(QGraphicsEllipseItem):
         while max_node.parent is not racine:
             max_node = max_node.parent
         return max_node.valeur[0], max_node.valeur[1]
-
+        '''
 
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
 
-        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 3)
+        prochain_etat = self.find_dests(circuit, init_pos, init_speed, 1)
         dest = prochain_etat[0]
         self.speed = prochain_etat[1]
 
