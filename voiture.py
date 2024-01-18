@@ -1,4 +1,4 @@
-'''
+'''Prof
 Dans ce module, on crée la classe Voiture pour définir les voitures de la course et leurs déplacements. 
 '''
 
