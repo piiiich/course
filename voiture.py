@@ -16,12 +16,12 @@ class Voiture(QGraphicsEllipseItem):
         self.color = "Black"
         self.speed = (0, 0)
         self.current_sector = 0
-        # if self.ecurie == "Ferrari" :
-        #     self.color = "Red"
-        # elif self.ecurie == "Red Bull":
-        #     self.color = "Blue"
-        # elif self.ecurie == "Mercedes":
-        #     self.color = "Cyan"
+        if self.ecurie == "Ferrari" :
+            self.color = "Red"
+        elif self.ecurie == "Red Bull":
+            self.color = "Blue"
+        elif self.ecurie == "Mercedes":
+            self.color = "Cyan"
 
     # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. 
     # les distances (en pixels) ne sont pas équivalentes dans les deux cas si on les ramène à des metres
@@ -134,7 +134,7 @@ class Voiture(QGraphicsEllipseItem):
         init_speed = self.speed
 
         # prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
-        dest, self.speed, self.current_sector = self.find_dest(circuit, 7)
+        dest, self.speed, self.current_sector = self.find_dest(circuit, 15)
         # self.speed = prochain_etat[1]
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])

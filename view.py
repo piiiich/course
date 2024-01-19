@@ -16,12 +16,10 @@ WIDTH = 800
 HEIGHT = 450
 
 # Couleurs des tracés (piste, limites, secteurs)
-CIR_COLOR = "grey"
-TRK_LIM_COLOR = "red"
-SEC_LIM_COLOR = "black"
+TRK_LIM_COLOR = "black"
+SEC_LIM_COLOR = "grey"
 
 # Pinceaux pour les tracés
-CIR_BRUSH = QBrush(QColor(CIR_COLOR))
 TRK_LIM_BRUSH = QBrush(QColor(TRK_LIM_COLOR))
 SEC_LIM_BRUSH = QBrush(QColor(SEC_LIM_COLOR))
 
