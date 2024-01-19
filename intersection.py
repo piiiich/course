@@ -18,6 +18,9 @@ def clockwise(u, v):
         return 1
     else:
         return 0
+    
+def vect(a, b):
+    return tuple(b[i] - a[i] for i in range(2))
 
 def segment_intersection(A, B, C, D):
     """ Renvoie True si les segments [AB] et [CD] s'intersectent, False sinon """
@@ -70,8 +73,6 @@ def tracklimit(dest, init, sector, circuit):
     return (segment_intersection(init, dest, a, c) or
             segment_intersection(init, dest, b, d))
 
-def vect(a, b):
-    return tuple(b[i] - a[i] for i in range(2))
 
 def backward(dest, init, init_sector, circuit):
     # Renvoie si la voiture revient vers la portion précédente
@@ -80,3 +81,13 @@ def backward(dest, init, init_sector, circuit):
     d_init = np.linalg.det([ab, vect(a, init)])
     d_dest = np.linalg.det([ab, vect(a, dest)])
     return d_init * d_dest < 0
+
+
+# Suggestion de Chatgpt : 
+'''
+def backward(dest, init, init_sector, circuit):
+    # Renvoie si la voiture revient vers la portion précédente
+    a, b = circuit.sectorLimits[init_sector].coords
+    d_init_dest = np.linalg.det([vect(a, b), vect(a, init), vect(a, dest)])
+    return d_init_dest < 0
+'''

@@ -84,9 +84,37 @@ class View(QWidget):
         self.scene.addItem(car)
         car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
         car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
-        # car.setPos(-75+(self.circuit.dep[0][0]+self.circuit.dep[1][0])//2, -75+(self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
         car.setPos((self.circuit.dep[0][0]+self.circuit.dep[1][0])//2,
-                   -100 + (self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+                   -150 + (self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        
+        car2 = voiture.Voiture("Red Bull", 150)
+        self.scene.addItem(car2)
+        car2.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
+        car2.setPen(QPen(QColor(car2.color), voiture.CAR_WIDTH))
+        car2.setPos(-50 + (self.circuit.dep[0][0]+self.circuit.dep[1][0])//2,
+                   -250 + (self.circuit.dep[0][1]+self.circuit.dep[1][1])//2)
+        
+
+    def add_car_items(self):
+        """ Ajoute les voitures sur la ligne de départ """
+        car_data = [
+            {"ecurie": "Ferrari", "reach": 150, "offset_x": 0, "offset_y": -150},
+            {"ecurie": "Red Bull", "reach": 150, "offset_x": -50, "offset_y": -250},
+            {"ecurie": "Mercedes", "reach": 150, "offset_x": 0, "offset_y": -100},
+            # Ajoutez d'autres voitures avec leurs données ici
+        ]
+
+        for data in car_data:
+            car = voiture.Voiture(data["ecurie"], data["reach"])
+            self.scene.addItem(car)
+            car.setRect(0, 0, voiture.CAR_WIDTH, voiture.CAR_WIDTH)
+            car.setPen(QPen(QColor(car.color), voiture.CAR_WIDTH))
+            car.setPos(
+                (self.circuit.dep[0][0] + self.circuit.dep[1][0]) // 2 + data["offset_x"],
+                (self.circuit.dep[0][1] + self.circuit.dep[1][1]) // 2 + data["offset_y"],
+            )
+
+            
     def move_car_items(self, car):
         """ Déplace la voiture """
         car.move(self.circuit)
@@ -94,8 +122,10 @@ class View(QWidget):
     def keyPressEvent(self, event): 
         """ Déplace la voiture avec les touches directionnelles """
         if event.key() == Qt.Key_Right:
-            car = self.scene.items()[0]
-            self.move_car_items(car)
+            for i in range(len(self.scene.items())):
+                if str(self.scene.items()[i])[0]=="V":
+                    car = self.scene.items()[i]
+                    self.move_car_items(car)
 
 def main():
     pass
