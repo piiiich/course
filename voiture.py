@@ -81,39 +81,6 @@ class Voiture(QGraphicsEllipseItem):
         towards_end = X.direction_test(self, dest, pos, circuit) and (not X.backward(dest, pos, sector, circuit))
         return (in_circuit and towards_end)
 
-    # def find_dests(self, circuit, init_pos, init_speed, depth):
-    #     ''' 
-    #     Cette fonction renvoie la destination optimale pour la voiture en fonction de sa position 
-    #     et de sa vitesse. On réalise un parcours en profondeur de profondeur depth.
-    #     '''
-    #     pos = init_pos
-    #     speed = init_speed
-    #     Dests_list = []
-        
-    #     def recursive_destination_test(List, depth):
-    #         level = depth
-    #         # Condition d'arrêt si on atteint la profondeur voulue
-    #         if level == 0:
-    #             Final_dest = self.dest_in_list(List, pos, circuit)
-    #             Dests_list.append(Final_dest)
-    #             return Final_dest
-            
-    #         else :
-    #             for dest in List:
-    #                 if self.dest_is_valid(dest, pos, circuit):
-    #                     Dests_list.append(dest)
-    #                     next_pos, next_speed = dest[0], tuple(speed[i]+dest[1][i] for i in (0, 1))
-    #                     next_list = self.tri_liste_distances(next_pos, next_speed)
-    #                     next_dest = recursive_destination_test(next_list, level-1)
-    #                     if next_dest != None:
-    #                         return next_dest
-    #                     else :
-    #                         Dests_list.pop()
-            
-    #     dest = recursive_destination_test(self.tri_liste_distances(pos, speed), depth)
-    #     return dest
-
-    # Correction JBG
     def find_dest(self, circuit, depth):
         '''
         Renvoie un triplet (position, vitesse, portion) envisageable
@@ -143,7 +110,50 @@ class Voiture(QGraphicsEllipseItem):
         return rec_find(self.position(), self.speed, self.current_sector, depth)
                 
 
-    
+'''
+Suggestion du chat pour le min max :
+    def avoid_collision(self, other_car, circuit, depth):
+        # Fonction pour éviter les collisions avec une autre voiture
+        # Utilisez votre algorithme Min-Max ici
+        pass 
+
+    def minimax(state, depth, maximizing_player):
+        if depth == 0 or game_over(state):
+            return evaluate_state(state)
+
+        if maximizing_player:
+            max_eval = float('-inf')
+            for action in possible_actions(state):
+                eval = minimax(result(state, action), depth - 1, False)
+                max_eval = max(max_eval, eval)
+            return max_eval
+        else:
+            min_eval = float('inf')
+            for action in possible_actions(state):
+                eval = minimax(result(state, action), depth - 1, True)
+                min_eval = min(min_eval, eval)
+            return min_eval
+
+    def decide_next_move(current_state):
+        best_value = float('-inf')
+        best_action = None
+        for action in possible_actions(current_state):
+            eval = minimax(result(current_state, action), depth=3, maximizing_player=False)
+            if eval > best_value:
+                best_value = eval
+                best_action = action
+        return best_action
+
+
+    def move_safely(self, circuit, other_cars):
+        # Éviter les collisions avec d'autres voitures
+        for other_car in other_cars:
+            self.avoid_collision(other_car, circuit, depth=3)
+
+        # Déplacer la voiture en toute sécurité
+        self.move(circuit) 
+'''
+
     def move(self, circuit):
         init_pos = self.position()
         init_speed = self.speed
@@ -154,7 +164,6 @@ class Voiture(QGraphicsEllipseItem):
 
         self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
 
-        
         # crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
         # if crosses_sector:
         #    self.current_sector += sectors_crossed
