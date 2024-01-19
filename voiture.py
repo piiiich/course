@@ -109,6 +109,20 @@ class Voiture(QGraphicsEllipseItem):
 
         return rec_find(self.position(), self.speed, self.current_sector, depth)
                 
+    def move(self, circuit):
+        init_pos = self.position()
+        init_speed = self.speed
+
+        # prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
+        dest, self.speed, self.current_sector = self.find_dest(circuit, 6)
+        # self.speed = prochain_etat[1]
+
+        self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
+
+        # crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
+        # if crosses_sector:
+        #    self.current_sector += sectors_crossed
+        # crosses_tracklimit = X.x_tracklimit(self, dest, init_pos, circuit)
 
 '''
 Suggestion du chat pour le min max :
@@ -153,20 +167,6 @@ Suggestion du chat pour le min max :
         # Déplacer la voiture en toute sécurité
         self.move(circuit) 
 '''
-
-    def move(self, circuit):
-        init_pos = self.position()
-        init_speed = self.speed
-
-        # prochain_etat = self.find_dests(circuit, init_pos, init_speed, 5)
-        dest, self.speed, self.current_sector = self.find_dest(circuit, 6)
-        # self.speed = prochain_etat[1]
-
-        self.setPos(self.x() + self.speed[0], self.y() + self.speed[1])
-
-        # crosses_sector, sectors_crossed = X.x_sector(self, dest, init_pos, circuit)
-        # if crosses_sector:
-        #    self.current_sector += sectors_crossed
 
 def dist(A, B):
     return np.sqrt((A[0] - B[0])**2 + (A[1] - B[1])**2)
