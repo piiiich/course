@@ -2,8 +2,6 @@
 Dans ce module on va récupérer les limites de la piste et des secteurs et créer l'objet circuit correspondant
 '''
 
-import numpy as np
-
 # Largeur de la piste
 TRK_LIM_WIDTH = 50
 
