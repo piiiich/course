@@ -18,7 +18,8 @@ def main():
     win = QMainWindow()
     win.setWindowTitle("Race")
     win.setCentralWidget(view)
-    win.showMaximized()
+    # win.showMaximized()
+    win.show()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
