@@ -113,7 +113,6 @@ class View(QWidget):
                 (self.circuit.dep[0][0] + self.circuit.dep[1][0]) // 2 + data["offset_x"],
                 (self.circuit.dep[0][1] + self.circuit.dep[1][1]) // 2 + data["offset_y"],
             )
-
             
     def move_car_items(self, car):
         """ Déplace la voiture """
