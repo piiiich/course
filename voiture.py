@@ -67,14 +67,7 @@ class Voiture(QGraphicsEllipseItem):
         liste_coups = self.liste_distances(pos, speed)
         liste_coups_triee = sorted(liste_coups, key = lambda x : x[2], reverse=True)
         return liste_coups_triee
-    
 
-    def dest_in_list(self, List, pos, circuit):
-        for dest in List:
-            if self.dest_is_valid(dest, pos, circuit):
-                return dest
-            else:
-                pass
     
     def dest_is_valid(self, dest, pos, sector, circuit):
         in_circuit = (not X.tracklimit(self, dest, pos, sector, circuit))
