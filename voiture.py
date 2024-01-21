@@ -33,7 +33,7 @@ class Voiture(QGraphicsEllipseItem):
         elif self.ecurie == "Red Bull":
             self.color = "Blue"
         elif self.ecurie == "Mercedes":
-            self.color = "Cyan"
+            self.color = "#008888"
 
     # On aura des problèmes d'échelle si on prend un circuit comme celui du prof ou comme celui de Monaco. 
     # les distances (en pixels) ne sont pas équivalentes dans les deux cas si on les ramène à des metres
