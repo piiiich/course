@@ -19,16 +19,27 @@ class PanZoomView(QGraphicsView):
         # permet de déplacer la vue avec la souris
         self.setDragMode(self.ScrollHandDrag)
 
+
     def fit_scene_in_view(self):
         """ On vérifie que la scène est affichée dans son intégralité par la vue """
         self.fitInView(self.sceneRect(), Qt.KeepAspectRatio)
+
 
     def zoom_view(self, factor):
         """ On met à jour le facteur de zoom de la vue """
         self.setTransformationAnchor(self.AnchorUnderMouse)
         super().scale(factor, factor)
 
+
     def wheelEvent(self, event):
         """ Permet de zoomer avec la molette de la souris """
         factor = math.pow(1.001, event.angleDelta().y())
         self.zoom_view(factor)
+
+
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()

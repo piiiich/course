@@ -22,6 +22,7 @@ class SectorLimit:
 
 # Créer un circuit
 class Circuit:
+
     def __init__(self, name, trackLimits, dep):
         self.name = name
         self.trackLimits = trackLimits
@@ -34,21 +35,19 @@ class Circuit:
         # Point de départ 
         self.dep = dep
 
+
 def coords_line(list):
-    '''list représente une ligne de coordonnées dans le fichier texte [x0, y0, x1, y1, ...]'''
-    
+    ''' On renvoie une liste de coordonnées (x, y) à partir d'une ligne de coordonnées dans le fichier texte
+    [x0, y0, x1, y1, ...] '''
     xys = []
     for i in range(len(list)//2):
-
         # On récupère une coordonnée sur deux pour avoir des couples (x, y)
         xys.append((int(list[2*i]), int(list[2*i+1])))
-
-    # Renvoie une liste de coordonnées (x, y)
     return xys 
 
+
 def from_file(filename):
-    ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit'''
-    
+    ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit '''
     print(f'Loading circuit {filename} ...')
     file = open(filename)
     
