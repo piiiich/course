@@ -1,5 +1,5 @@
 ''' 
-Dans ce module on va créer la fenêtre principale de l'application : on appelle tous nos fichiers 
+Dans ce module on va créer la fenêtre principale de l'application : on appelle tous nos fichiers
 '''
 
 import circuit

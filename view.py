@@ -3,7 +3,7 @@ Dans ce module, on va créer la vue du circuit à l'aide de PyQt5.
 On va afficher le circuit, les limites de piste et de secteurs et les voitures.
 '''
 
-# import PyQt5
+# Import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QColor, QPainterPath, QPen
 from PyQt5.QtWidgets import (QGraphicsItemGroup, QGraphicsLineItem, QGraphicsPathItem, QGraphicsScene, QVBoxLayout, QWidget)
@@ -51,6 +51,7 @@ class View(QWidget):
 
     def add_circuit_items(self):
         """ Ajoute tous les tracés du circuit """
+
         circuit_group = QGraphicsItemGroup()
         self.scene.addItem(circuit_group)
 
@@ -78,6 +79,7 @@ class View(QWidget):
 
     def add_car_items(self):
         """ Ajoute les voitures sur la ligne de départ """
+
         car_data = [
             {"ecurie": "Ferrari", "reach": 150, "offset_x": 0, "offset_y": -150},
             {"ecurie": "Red Bull", "reach": 150, "offset_x": -50, "offset_y": -250},
@@ -102,6 +104,7 @@ class View(QWidget):
 
     def keyPressEvent(self, event): 
         """ Déplace la voiture avec les touches directionnelles """
+
         if event.key() == Qt.Key_Right:
             for i in range(len(self.scene.items())):
                 if str(self.scene.items()[i])[0]=="V":
@@ -114,3 +117,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
