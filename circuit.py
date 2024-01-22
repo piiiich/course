@@ -31,29 +31,28 @@ class Circuit:
             # On crée les secteurs et leurs limites en utilisant les limites de la piste
             self.sectorLimits.append(SectorLimit(str(sector_index), [self.trackLimits[i].coords[sector_index] for i in [0, 1]]))
 
-        # Point de départ 
-        self.dep = dep
+        self.dep = dep # Point de départ
+
 
 def coords_line(list):
-    '''list représente une ligne de coordonnées dans le fichier texte [x0, y0, x1, y1, ...]'''
-    
+    ''' On renvoie une liste de coordonnées (x, y) à partir d'une ligne de coordonnées dans le fichier texte
+    [x0, y0, x1, y1, ...] '''
+
     xys = []
     for i in range(len(list)//2):
-
         # On récupère une coordonnée sur deux pour avoir des couples (x, y)
         xys.append((int(list[2*i]), int(list[2*i+1])))
-
-    # Renvoie une liste de coordonnées (x, y)
+    
     return xys 
 
+
 def from_file(filename):
-    ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit'''
+    ''' Créer un circuit à partir d'un fichier texte contenant les caractéristiques du circuit '''
     
     print(f'Loading circuit {filename} ...')
     file = open(filename)
     
-    # On lit le nom du circuit
-    name = file.readline().strip() 
+    name = file.readline().strip()    # On lit le nom du circuit
     Ext, Int= [], []
     
     # On lit les limites intérieure et extérieure de la piste et les coordonnées du départ
